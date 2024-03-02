@@ -1,6 +1,6 @@
 package com.soundhub.api.enums;
 
-public enum RoleName {
+public enum Role {
     ROLE_ADMIN,
     ROLE_USER
 }

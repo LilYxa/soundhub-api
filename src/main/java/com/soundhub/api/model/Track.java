@@ -24,10 +24,7 @@ public class Track {
     private String duration;
 
     @ManyToOne
-    @JoinColumn(name = "playlist_id")
-    private Playlist playlist;
-
-    @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album;
+
 }

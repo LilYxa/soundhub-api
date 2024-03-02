@@ -19,6 +19,7 @@ public class Message {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "sender_id")
     private User sender;
 
     @Column(name = "content")

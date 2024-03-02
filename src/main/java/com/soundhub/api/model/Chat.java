@@ -18,12 +18,21 @@ public class Chat {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
+    @JoinTable(
+            name = "chat_participants",
+            joinColumns = @JoinColumn(name = "chat_id"),
+            inverseJoinColumns = @JoinColumn(name = "participant_id")
+    )
     private List<User> participants;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
     private List<Message> messages;
 
     @OneToOne
+    @JoinColumn(name = "last_message_id")
     private Message lastMessage;
+
+    @Column(name = "unread_count")
+    private Integer unreadCount;
 }

@@ -32,4 +32,7 @@ public class Post {
     @ElementCollection
     private List<String> images;
 
+    @Column(name = "likes")
+    private Integer likes;
+
 }

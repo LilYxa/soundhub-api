@@ -21,9 +21,15 @@ public class Playlist {
     @Column(name = "name")
     private String name;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "author_id")
     private User author;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "playlist")
+    @ManyToMany
+    @JoinTable(
+            name = "playlist_tracks",
+            joinColumns = @JoinColumn(name = "playlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "track_id")
+    )
     private List<Track> tracks;
 }

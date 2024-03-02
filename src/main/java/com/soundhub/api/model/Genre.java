@@ -1,26 +1,30 @@
 package com.soundhub.api.model;
 
-import com.soundhub.api.enums.RoleName;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.UUID;
 
+@Entity
 @Data
 @NoArgsConstructor
-@Entity
-@Table(name = "roles")
-public class Role {
+@AllArgsConstructor
+@Table(name = "genres")
+@Builder
+public class Genre {
     @Id
     @GeneratedValue
     @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @Column(name = "id")
     private UUID id;
 
-    @Enumerated(value = EnumType.STRING)
-    @NaturalId
     @Column(name = "name")
-    private RoleName name;
+    private String name;
+
+    @Column(name = "pictureUrl")
+    private String pictureUrl;
 }

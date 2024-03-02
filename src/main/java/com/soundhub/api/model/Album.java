@@ -25,7 +25,11 @@ public class Album {
     @Column(name = "releaseDate")
     private LocalDate releaseDate;
 
-    @OneToMany(mappedBy = "album")
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     private List<Track> tracks;
 
     @ManyToOne
