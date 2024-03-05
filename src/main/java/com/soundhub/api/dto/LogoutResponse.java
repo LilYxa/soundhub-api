@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class LogoutResponse {
-    private String expired_jwt;
+    private String expiredJwt;
 }

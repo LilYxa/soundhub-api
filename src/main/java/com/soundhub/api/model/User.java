@@ -41,10 +41,6 @@ public class User implements UserDetails {
     private String email;
 
     @NotBlank
-    @Column(name = "username", unique = true)
-    private String username;
-
-    @NotBlank
     @Column(name = "password")
     private String password;
 
@@ -84,7 +80,6 @@ public class User implements UserDetails {
             name = "user_friends",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id"))
-//    @JsonIgnore
     private List<User> friends;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -94,7 +89,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
-//    @JsonIgnore
     private List<Genre> favoriteGenres;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -103,7 +97,6 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "artist_id"))
     @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
-//    @JsonIgnore
     private List<Artist> favoriteArtists;
 
     @Column(name = "role")
@@ -114,13 +107,12 @@ public class User implements UserDetails {
     @JsonIgnore
     private RefreshToken refreshToken;
 
-    public User(String email, String username, String password,
+    public User(String email, String password,
                 String firstName, String lastName, LocalDate birthday,
                 String city, String country, Gender gender, String avatarUrl,
                 String description, List<String> languages,
                 List<Genre> favoriteGenres, List<Artist> favoriteArtists) {
         this.email = email;
-        this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;

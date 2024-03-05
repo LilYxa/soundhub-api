@@ -1,5 +1,6 @@
 package com.soundhub.api.config;
 
+import com.soundhub.api.security.JwtAuthenticationEntryPoint;
 import com.soundhub.api.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,6 +37,7 @@ public class SecurityConfig {
                     corsConfiguration.setAllowCredentials(true);
                     return corsConfiguration;
                 }))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")

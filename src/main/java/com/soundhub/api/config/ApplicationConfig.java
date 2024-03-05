@@ -20,12 +20,6 @@ public class ApplicationConfig {
 
     private final UserRepository userRepository;
 
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        return usernameOrEmail -> userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-//                .orElseThrow(() -> new UsernameNotFoundException(String.format(Constants.USERNAME_NOT_FOUND, usernameOrEmail)));
-//    }
-
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)

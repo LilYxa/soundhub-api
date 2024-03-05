@@ -42,25 +42,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.USERNAME_FIELD, username));
-    }
-
-    @Override
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.EMAIL_FIELD, email));
-    }
-
-    @Override
-    @Transactional
-    public User getUserByEmailOrUsername(String emailOrUsername) {
-        return userRepository.findByUsernameOrEmail(emailOrUsername, emailOrUsername)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(Constants.USERNAME_NOT_FOUND, emailOrUsername)));
-    }
-
-    @Override
-    public Boolean checkUsernameAvailability(String username) {
-        return userRepository.existsByUsername(username);
     }
 
     @Override
@@ -71,11 +54,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getCurrentUser() {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getUserByUsername(username);
-    }
-
-    @Override
-    public UserDetailsService userDetailsService() {
-        return this::getUserByUsername;
+        return getUserByEmail(username);
     }
 }

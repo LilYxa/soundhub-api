@@ -26,4 +26,10 @@ public class UserController {
         User newUser = userService.addUser(user);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
+
+    @GetMapping("/currentUser")
+    public ResponseEntity<User> getCurrentUser() {
+        User currentUser = userService.getCurrentUser();
+        return new ResponseEntity<>(currentUser, HttpStatus.OK);
+    }
 }

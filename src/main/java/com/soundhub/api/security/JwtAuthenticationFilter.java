@@ -24,7 +24,6 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserService userService;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -47,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//            UserDetails userDetails = userService.getUserByEmail(username);
             log.debug("doFilterInternal[2]: userDetails: {}", userDetails);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

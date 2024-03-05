@@ -3,21 +3,16 @@ package com.soundhub.api.security;
 import com.soundhub.api.Constants;
 import com.soundhub.api.dto.*;
 import com.soundhub.api.enums.Role;
-import com.soundhub.api.exception.ApiException;
-import com.soundhub.api.model.Artist;
+import com.soundhub.api.exception.InvalidEmailOrPasswordException;
+import com.soundhub.api.exception.UserAlreadyExistsException;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,15 +25,10 @@ public class AuthenticationService {
 
     public AuthResponse signUp(SignUpDto signUpDto) {
         if (Boolean.TRUE.equals(userService.checkEmailAvailability(signUpDto.getEmail()))) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, Constants.USER_EMAIL_EXISTS_MSG);
-        }
-
-        if (Boolean.TRUE.equals(userService.checkUsernameAvailability(signUpDto.getUsername()))) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, Constants.USER_USERNAME_EXISTS_MSG);
+            throw new UserAlreadyExistsException(Constants.USER_EMAIL_EXISTS_MSG);
         }
 
         var user = User.builder()
-                .username(signUpDto.getUsername())
                 .email(signUpDto.getEmail())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .firstName(signUpDto.getFirstName())
@@ -66,15 +56,12 @@ public class AuthenticationService {
     }
 
     public AuthResponse signIn(SignInDto signInDto) {
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(signInDto.getEmail(), signInDto.getPassword())
-//        );
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(signInDto.getEmail(), signInDto.getPassword())
             );
         } catch (AuthenticationException e) {
-            throw new ApiException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+            throw new InvalidEmailOrPasswordException(Constants.INVALID_EMAIL_PASSWORD);
         }
 
         var user = userService.getUserByEmail(signInDto.getEmail());
