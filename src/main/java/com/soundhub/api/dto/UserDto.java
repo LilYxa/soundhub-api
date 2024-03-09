@@ -1,6 +1,8 @@
 package com.soundhub.api.dto;
 
 import com.soundhub.api.enums.Gender;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,11 +14,19 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserDto {
     private UUID id;
+    @NotBlank
     private String email;
-    private String username;
+
+    @NotBlank
     private String password;
+
+    @NotBlank
     private String firstName;
+
+    @NotBlank
     private String lastName;
+
+    @NotNull
     private LocalDate birthday;
     private String city;
     private String country;
