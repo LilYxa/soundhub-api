@@ -24,6 +24,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
+    private final JwtBlacklist jwtBlacklist;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -40,6 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(Constants.BEARER_PREFIX.length());
+
+        if (jwt != null && jwtBlacklist.isBlacklisted(jwt)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String username = jwtService.extractUsername(jwt);
         log.debug("doFilterInternal[1]: username: {}", username);
 

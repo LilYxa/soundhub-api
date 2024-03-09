@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final UserService userService;
     private final JwtService jwtService;
+    private final JwtBlacklist jwtBlacklist;
     private final RefreshTokenService refreshTokenService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
@@ -86,10 +87,20 @@ public class AuthenticationService {
                 .build();
     }
 
-    public LogoutResponse logout(LogoutRequest request) {
-        String jwt = jwtService.invalidateToken(request.getAccessToken());
-        refreshTokenService.deleteRefreshToken(request.getRefreshToken());
-        return new LogoutResponse(jwt);
+//    public LogoutResponse logout(LogoutRequest request) {
+//        String jwt = jwtService.invalidateToken(request.getAccessToken());
+//        refreshTokenService.deleteRefreshToken(request.getRefreshToken());
+//        return new LogoutResponse(jwt);
+//    }
+
+    public LogoutResponse logout(String authHeader) {
+        String jwt = authHeader.substring(Constants.BEARER_PREFIX.length());
+        String username = jwtService.extractUsername(jwt);
+        User currentUser = userService.getUserByEmail(username);
+
+        jwtBlacklist.addToBlacklist(jwt);
+        refreshTokenService.deleteRefreshToken(currentUser.getRefreshToken().getRefreshToken());
+        return new LogoutResponse(Constants.SUCCESSFUL_LOGOUT);
     }
 
 }

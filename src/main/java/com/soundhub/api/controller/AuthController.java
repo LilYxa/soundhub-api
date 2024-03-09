@@ -9,10 +9,7 @@ import com.soundhub.api.security.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -31,8 +28,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout(@RequestBody LogoutRequest logoutRequest) {
-        return ResponseEntity.ok(authenticationService.logout(logoutRequest));
+    public ResponseEntity<LogoutResponse> logout(@RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(authenticationService.logout(authHeader));
     }
 
     @PostMapping("/refresh")
