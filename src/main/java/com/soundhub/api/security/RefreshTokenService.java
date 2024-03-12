@@ -24,7 +24,6 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public RefreshToken createRefreshToken(String email) {
-//        User user = userService.getUserByEmailOrUsername(email);
         User user = userService.getUserByEmail(email);
 
         RefreshToken refreshToken = user.getRefreshToken();

@@ -13,6 +13,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -21,32 +24,14 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final JwtBlacklist jwtBlacklist;
     private final RefreshTokenService refreshTokenService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    public AuthResponse signUp(SignUpDto signUpDto) {
-        if (Boolean.TRUE.equals(userService.checkEmailAvailability(signUpDto.getEmail()))) {
+    public AuthResponse signUp(UserDto userDto, MultipartFile file) throws IOException {
+        if (Boolean.TRUE.equals(userService.checkEmailAvailability(userDto.getEmail()))) {
             throw new UserAlreadyExistsException(Constants.USER_EMAIL_EXISTS_MSG);
         }
 
-        var user = User.builder()
-                .email(signUpDto.getEmail())
-                .password(passwordEncoder.encode(signUpDto.getPassword()))
-                .firstName(signUpDto.getFirstName())
-                .lastName(signUpDto.getLastName())
-                .birthday(signUpDto.getBirthday())
-                .city(signUpDto.getCity())
-                .country(signUpDto.getCountry())
-                .gender(signUpDto.getGender())
-                .avatarUrl(signUpDto.getAvatarUrl())
-                .description(signUpDto.getDescription())
-                .languages(signUpDto.getLanguages())
-                .favoriteGenres(signUpDto.getFavoriteGenres())
-                .favoriteArtists(signUpDto.getFavoriteArtists())
-                .role(Role.ROLE_USER)
-                .build();
-
-        userService.addUser(user);
+        User user = userService.addUser(userDto, file);
         var jwt = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
 

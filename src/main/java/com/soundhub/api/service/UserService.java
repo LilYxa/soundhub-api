@@ -1,18 +1,22 @@
 package com.soundhub.api.service;
 
+import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public interface UserService {
-    User addUser(User user);
+//    User addUser(User user);
+    User addUser(UserDto userDto, MultipartFile file) throws IOException;
 
-    User getUserById(UUID id);
+    UserDto getUserById(UUID id);
 
-    UUID deleteUser(String email);
+    UUID deleteUser(UUID userId) throws IOException;
 
-    User updateUser(UUID id);
+    UserDto updateUser(UUID userId, UserDto userDto, MultipartFile file) throws IOException;
 
     User getUserByEmail(String email);
 

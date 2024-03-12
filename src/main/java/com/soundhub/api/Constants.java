@@ -13,6 +13,7 @@ public class Constants {
     public static final String USERNAME_NOT_FOUND = "User not found with this username or email: %s";
     public static final String SUCCESSFUL_LOGOUT = "You have successfully logged out";
     public static final String INVALID_EMAIL_PASSWORD = "Invalid email or password";
+    public static final String FILE_ALREADY_EXISTS = "This file already exist! Please enter another file name.";
 
     public static final String UNAUTHORIZED_ERROR_MESSAGE = "Sorry, You're not authorized to access this resource.";
 
@@ -20,4 +21,6 @@ public class Constants {
     public static final String BEARER_PREFIX = "Bearer ";
 
     public static final String BLACKLIST_KEY_PREFIX = "blacklist:";
+    public static final String FILE_PATH_PART = "/file/";
+    public static final String DEFAULT_USER_AVATAR_NAME = "default.jpg";
 }

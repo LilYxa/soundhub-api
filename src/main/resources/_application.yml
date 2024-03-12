@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/soundtest
+    username: test
+    password: 123456
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  redis:
+    host: localhost
+    port: 6379
+
+token:
+  signing:
+    key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
+    expirationInMs: 3600000
+
+refreshToken:
+  expirationInMs: 604800000
+
+logging:
+  level:
+    com:
+      soundhub:
+        api: DEBUG
+
+project:
+  genreImg: genrePictures/
+  postImg: postPictures/
+  avatar: avatars/
+  pictures: pictures/
+
+base:
+  url: http://localhost:8080

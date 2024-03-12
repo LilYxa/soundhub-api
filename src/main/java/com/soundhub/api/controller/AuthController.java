@@ -10,6 +10,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -18,8 +21,9 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<AuthResponse> signUp(@RequestBody @Valid SignUpDto signUpDto) {
-        return ResponseEntity.ok(authenticationService.signUp(signUpDto));
+    public ResponseEntity<AuthResponse> signUp(@RequestPart(name = "userData") @Valid UserDto userDto,
+                                               @RequestPart(required = false) MultipartFile file) throws IOException {
+        return ResponseEntity.ok(authenticationService.signUp(userDto, file));
     }
 
     @PostMapping("/sign-in")
