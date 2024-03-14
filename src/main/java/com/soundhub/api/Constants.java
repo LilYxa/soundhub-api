@@ -22,6 +22,6 @@ public class Constants {
 
     public static final String BLACKLIST_KEY_PREFIX = "blacklist:";
     public static final String BLACKLIST_CACHE_NAME = "jwt-blacklist";
-    public static final String FILE_PATH_PART = "/file/";
+    public static final String FILE_PATH_PART = "/api/v1/files/";
     public static final String DEFAULT_USER_AVATAR_NAME = "default.jpg";
 }

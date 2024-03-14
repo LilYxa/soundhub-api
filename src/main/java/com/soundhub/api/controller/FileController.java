@@ -29,8 +29,8 @@ public class FileController {
     }
 
     @GetMapping("/{filename}")
-    public void serveFileHandler(@PathVariable String filename, HttpServletResponse httpServletResponse) throws IOException {
-        InputStream resourceFile = fileService.getResourceFile(path, filename);
+    public void serveFileHandler(@PathVariable String filename, @RequestParam String folderName, HttpServletResponse httpServletResponse) throws IOException {
+        InputStream resourceFile = fileService.getResourceFile(folderName, filename);
         httpServletResponse.setContentType(MediaType.ALL_VALUE);
         StreamUtils.copy(resourceFile, httpServletResponse.getOutputStream());
     }
