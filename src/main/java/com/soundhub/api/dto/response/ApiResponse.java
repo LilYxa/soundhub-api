@@ -1,4 +1,4 @@
-package com.soundhub.api.dto;
+package com.soundhub.api.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

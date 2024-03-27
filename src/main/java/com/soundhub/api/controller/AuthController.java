@@ -1,11 +1,10 @@
 package com.soundhub.api.controller;
 
 import com.soundhub.api.dto.*;
-import com.soundhub.api.model.User;
+import com.soundhub.api.dto.request.RefreshTokenRequest;
+import com.soundhub.api.dto.response.AuthResponse;
+import com.soundhub.api.dto.response.LogoutResponse;
 import com.soundhub.api.security.AuthenticationService;
-import com.soundhub.api.security.JwtService;
-import com.soundhub.api.security.RefreshToken;
-import com.soundhub.api.security.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

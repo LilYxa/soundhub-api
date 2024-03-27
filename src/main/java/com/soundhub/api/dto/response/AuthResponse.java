@@ -1,4 +1,4 @@
-package com.soundhub.api.dto;
+package com.soundhub.api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class LogoutResponse {
-    private String message;
+public class AuthResponse {
+    private String accessToken;
+    private String refreshToken;
 }

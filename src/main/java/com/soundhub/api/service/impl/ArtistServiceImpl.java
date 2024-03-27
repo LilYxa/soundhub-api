@@ -6,6 +6,8 @@ import com.soundhub.api.service.ArtistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ArtistServiceImpl implements ArtistService {
 
@@ -17,5 +19,8 @@ public class ArtistServiceImpl implements ArtistService {
         return artistRepository.save(artist);
     }
 
-
+    @Override
+    public List<Artist> getAllArtists() {
+        return artistRepository.findAll();
+    }
 }

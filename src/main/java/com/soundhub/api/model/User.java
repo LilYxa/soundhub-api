@@ -89,7 +89,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+//    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private List<Genre> favoriteGenres;
 
     @ManyToMany(fetch = FetchType.EAGER)

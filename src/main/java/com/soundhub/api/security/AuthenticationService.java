@@ -2,7 +2,9 @@ package com.soundhub.api.security;
 
 import com.soundhub.api.Constants;
 import com.soundhub.api.dto.*;
-import com.soundhub.api.enums.Role;
+import com.soundhub.api.dto.request.RefreshTokenRequest;
+import com.soundhub.api.dto.response.AuthResponse;
+import com.soundhub.api.dto.response.LogoutResponse;
 import com.soundhub.api.exception.InvalidEmailOrPasswordException;
 import com.soundhub.api.exception.UserAlreadyExistsException;
 import com.soundhub.api.model.User;
@@ -11,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,4 +1,4 @@
-package com.soundhub.api.dto;
+package com.soundhub.api.dto.request;
 
 import lombok.Data;
 

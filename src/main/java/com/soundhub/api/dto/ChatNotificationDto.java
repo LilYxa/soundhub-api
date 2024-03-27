@@ -5,11 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthResponse {
-    private String accessToken;
-    private String refreshToken;
+public class ChatNotificationDto {
+    private UUID id;
+
+    private UUID senderId;
+
+    private String content;
 }

@@ -3,6 +3,9 @@ package com.soundhub.api;
 public class Constants {
     public static final String USER_RESOURCE_NAME = "User";
 
+    public static final String CHAT_RESOURCE_NAME = "Chat";
+    public static final String MESSAGE_RESOURCE_NAME = "Message";
+
     public static final String USERNAME_FIELD = "username";
     public static final String EMAIL_FIELD = "email";
     public static final String ID_FIELD = "id";
@@ -14,7 +17,9 @@ public class Constants {
     public static final String SUCCESSFUL_LOGOUT = "You have successfully logged out";
     public static final String INVALID_EMAIL_PASSWORD = "Invalid email or password";
     public static final String FILE_ALREADY_EXISTS = "This file already exist! Please enter another file name.";
-
+    public static final String PERMISSION_MESSAGE = "You don't have permissions for this operation.";
+    public static final String CHAT_DELETE_SUCCESS_MSG = "Chat with id: %s was successfully deleted";
+    public static final String CHAT_NOT_CONTAINS_USER = "This user is not related to this chat";
     public static final String UNAUTHORIZED_ERROR_MESSAGE = "Sorry, You're not authorized to access this resource.";
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
