@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/files")
@@ -33,5 +34,11 @@ public class FileController {
         InputStream resourceFile = fileService.getResourceFile(folderName, filename);
         httpServletResponse.setContentType(MediaType.ALL_VALUE);
         StreamUtils.copy(resourceFile, httpServletResponse.getOutputStream());
+    }
+
+    @PostMapping("/upload/files")
+    public ResponseEntity<List<String>> uploadListFilesHandler(@RequestPart List<MultipartFile> files) {
+        List<String> fileNames = fileService.uploadFileList(path, files);
+        return ResponseEntity.ok(fileNames);
     }
 }

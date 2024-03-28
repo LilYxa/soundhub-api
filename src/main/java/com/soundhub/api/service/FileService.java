@@ -5,10 +5,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 public interface FileService {
 
     String uploadFile(String path, MultipartFile multipartFile) throws IOException;
+
+    List<String> uploadFileList(String path, List<MultipartFile> multipartFile);
 
     InputStream getResourceFile(String path, String filename) throws FileNotFoundException;
 }

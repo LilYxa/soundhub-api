@@ -1,6 +1,8 @@
 package com.soundhub.api.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
@@ -12,7 +14,9 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "posts")
+@Builder
 public class Post {
     @Id
     @GeneratedValue
@@ -35,4 +39,12 @@ public class Post {
     @Column(name = "likes")
     private Integer likes;
 
+//    public Post(User author, LocalDateTime publishDate,
+//                String content, List<String> images) {
+//        this.author = author;
+//        this.publishDate = LocalDateTime.now();
+//        this.content = content;
+//        this.images = images;
+//        this.likes = 0;
+//    }
 }
