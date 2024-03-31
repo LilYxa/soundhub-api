@@ -38,4 +38,9 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleRefreshTokenNotFoundException(RefreshTokenNotFoundException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
+
+    @ExceptionHandler(PythonExecutionException.class)
+    public ProblemDetail handlePythonExecutionException(PythonExecutionException e) {
+        return ProblemDetail.forStatusAndDetail(e.getStatus(), e.getMessage());
+    }
 }

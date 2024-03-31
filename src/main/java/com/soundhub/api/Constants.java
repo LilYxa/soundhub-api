@@ -24,6 +24,8 @@ public class Constants {
     public static final String CHAT_NOT_CONTAINS_USER = "This user is not related to this chat";
     public static final String UNAUTHORIZED_ERROR_MESSAGE = "Sorry, You're not authorized to access this resource.";
 
+    public static final String PYTHON_EXECUTION_FAILED = "Python script execution failed";
+
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
 

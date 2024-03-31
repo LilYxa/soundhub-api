@@ -92,13 +92,15 @@ public class User implements UserDetails {
 //    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private List<Genre> favoriteGenres;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_favorite_artists",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "artist_id"))
-    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
-    private List<Artist> favoriteArtists;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "user_favorite_artists",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "artist_id"))
+//    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
+//    private List<Artist> favoriteArtists;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Integer> favoriteArtistsIds;
 
     @Column(name = "role")
     @Enumerated(value = EnumType.STRING)
@@ -112,7 +114,7 @@ public class User implements UserDetails {
                 String firstName, String lastName, LocalDate birthday,
                 String city, String country, Gender gender, String avatarUrl,
                 String description, List<String> languages,
-                List<Genre> favoriteGenres, List<Artist> favoriteArtists) {
+                List<Genre> favoriteGenres, List<Integer> favoriteArtists) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -125,7 +127,7 @@ public class User implements UserDetails {
         this.description = description;
         this.languages = languages;
         this.favoriteGenres = favoriteGenres;
-        this.favoriteArtists = favoriteArtists;
+        this.favoriteArtistsIds = favoriteArtists;
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.soundhub.api.dto;
 
 import com.soundhub.api.enums.Gender;
-import com.soundhub.api.model.Artist;
 import com.soundhub.api.model.Genre;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -51,5 +50,5 @@ public class SignUpDto {
 
     private List<Genre> favoriteGenres;
 
-    private List<Artist> favoriteArtists;
+    private List<Integer> favoriteArtistsIds;
 }
