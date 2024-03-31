@@ -23,6 +23,7 @@ public class Constants {
     public static final String CHAT_DELETE_SUCCESS_MSG = "Chat with id: %s was successfully deleted";
     public static final String CHAT_NOT_CONTAINS_USER = "This user is not related to this chat";
     public static final String UNAUTHORIZED_ERROR_MESSAGE = "Sorry, You're not authorized to access this resource.";
+    public static final String FRIEND_ALREADY_ADDED = "Friend is already in friends list";
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";

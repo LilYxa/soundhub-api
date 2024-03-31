@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -70,23 +68,28 @@ public class PostServiceImpl implements PostService {
                 .images(postImageUrl)
                 .build();
 
-        log.info("addPost [1]: Adding post {}", post);
+        log.info("addPost[1]: Adding post {}", post);
         postDto = postMapper.toPostDto(postRepository.save(post));
         return postDto;
     }
 
-//    @Override
-//    public PostDto addLike(UUID postId) {
-//        PostDto postDto = getPostById(postId);
-//        Integer likes = postDto.getLikes();
-//        postDto.setLikes(likes++);
-//        updatePost(postId, postDto, file);
-//        return postDto;
-//    }
+    @Override
+    public Post toggleLike(UUID postId, User user) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId));
+        Set<User> likes = post.getLikes();
+        boolean isChanged;
+        isChanged = (likes.contains(user)) ? likes.remove(user) : likes.add(user);
+        log.info("toggleLike[1]: Toggled like successfully: {}", isChanged);
+        if (isChanged) {
+            postRepository.save(post);
+        }
+        return post;
+    }
 
     @Override
     public PostDto getPostById(UUID postId) {
-        log.info("getPostById [1]: Getting post by ID {}", postId);
+        log.info("getPostById[1]: Getting post by ID {}", postId);
         return postMapper.toPostDto(postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId)));
     }
@@ -95,12 +98,30 @@ public class PostServiceImpl implements PostService {
     public UUID deletePost(UUID postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId));
-
-//        String fileName = user.getAvatarUrl().substring(user.getAvatarUrl().lastIndexOf("/") + 1);
-//        Files.deleteIfExists(Paths.get(path + File.separator + fileName));
-
+        List<String> postImages = post.getImages();
+        List<String> postImagesUrls = new ArrayList<>();
+        postImages.forEach(f -> postImagesUrls.add(f.substring(f.lastIndexOf("/") + 1)));
+        log.info("deletePost[1]: Getting the post images urls {}", postImagesUrls);
+        postImagesUrls.forEach(f -> {
+            try {
+                Files.deleteIfExists(Paths.get(path + File.separator + f));
+            } catch (IOException e) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
+            }
+        });
         postRepository.delete(post);
+        log.info("deletePost[2]: Images was successfully deleted from the disk. Post ID {} deleted", postId);
         return post.getId();
+    }
+
+    @Override
+    public PostDto updatePost(UUID postId, PostDto postDto) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId));
+        log.debug("updatePost[1]: Updating post without files replacing ID {}", postId);
+        postMapper.updatePostFromDto(postDto, post);
+        postRepository.save(post);
+        return postMapper.toPostDto(post);
     }
 
     @Override
@@ -115,15 +136,15 @@ public class PostServiceImpl implements PostService {
             try {
                 Files.deleteIfExists(Paths.get(path + File.separator + f.substring(f.lastIndexOf("/") + 1)));
                 postImages.remove(f);
-                log.debug("updatePost [1]: Updating post {} files deleted {}", postId, f);
+                log.debug("updatePost[1]: Updating post {} files deleted {}", postId, f);
             } catch (IOException e) {
                 throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
             }
         });
-        log.debug("updatePost [2]: Updating post: files remain {}", postImages);
+        log.debug("updatePost[2]: Updating post: files remain {}", postImages);
         postImages.addAll(updatedFileNamesUrls);
         postDto.setImages(postImages);
-        log.debug("updatePost [3]: Updating post: files after insert {}", postImages);
+        log.debug("updatePost[3]: Updating post: files after insert {}", postImages);
         postMapper.updatePostFromDto(postDto, post);
         postRepository.save(post);
         return postMapper.toPostDto(post);
@@ -132,6 +153,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getPostsByAuthor(UUID authorId) {
         User user = userMapper.userDtoToUser(userService.getUserById(authorId));
+        log.info("getPostsByAuthor[1]: User entity was requested {}", user);
         return postRepository.findAllByAuthor(user);
     }
 }

@@ -12,9 +12,15 @@ public interface UserService {
 //    User addUser(User user);
     User addUser(UserDto userDto, MultipartFile file) throws IOException;
 
+    User addFriend(UUID friendId) throws IOException;
+
+    User deleteFriend(UUID friendId) throws IOException;
+
     UserDto getUserById(UUID id);
 
     UUID deleteUser(UUID userId) throws IOException;
+
+    UserDto updateUser(UUID userId, UserDto userDto) throws IOException;
 
     UserDto updateUser(UUID userId, UserDto userDto, MultipartFile file) throws IOException;
 

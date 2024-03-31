@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,15 +38,10 @@ public class Post {
     @ElementCollection
     private List<String> images;
 
-    @Column(name = "likes")
-    private Integer likes;
-
-//    public Post(User author, LocalDateTime publishDate,
-//                String content, List<String> images) {
-//        this.author = author;
-//        this.publishDate = LocalDateTime.now();
-//        this.content = content;
-//        this.images = images;
-//        this.likes = 0;
-//    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_posts",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> likes = new HashSet<>();
 }

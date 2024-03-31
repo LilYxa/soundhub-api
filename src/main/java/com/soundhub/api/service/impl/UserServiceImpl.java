@@ -11,6 +11,7 @@ import com.soundhub.api.service.FileService;
 import com.soundhub.api.service.UserService;
 import com.soundhub.api.util.UserMapper;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -25,10 +26,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.soundhub.api.Constants.FRIEND_ALREADY_ADDED;
+
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
@@ -89,6 +95,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User addFriend(UUID friendId) throws IOException {
+        User user = getCurrentUser();
+        User newFriend = userRepository.findById(friendId).get();
+        List<User> friendsList = user.getFriends();
+        if(friendsList.contains(newFriend)) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, FRIEND_ALREADY_ADDED);
+        } else {
+            friendsList.add(newFriend);
+            log.info("addFriend[1]: Friend added successfully ID {}", friendId);
+            user.setFriends(friendsList);
+            log.info("addFriend[2]: Friends list {}", friendsList);
+            updateUser(user.getId(), userMapper.userToUserDto(user));
+            return user;
+        }
+    }
+
+    @Override
+    public User deleteFriend(UUID friendId) throws IOException {
+        User user = getCurrentUser();
+        User delFriend = userRepository.findById(friendId)
+                .orElseThrow(() -> new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.ID_FIELD, friendId));
+        user.getFriends().remove(delFriend);
+        log.info("deleteFriend[1]: Friend deleted successfully ID {}", friendId);
+        updateUser(user.getId(), userMapper.userToUserDto(user));
+        return user;
+    }
+
+    @Override
     public UserDto getUserById(UUID id) {
         return toUserDto(userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.ID_FIELD, id)));
@@ -104,6 +138,16 @@ public class UserServiceImpl implements UserService {
 
         userRepository.delete(user);
         return user.getId();
+    }
+
+    @Override
+    public UserDto updateUser(UUID userId, UserDto userDto) throws IOException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.ID_FIELD, userId));
+        userMapper.updateUserFromDto(userDto, user);
+        userRepository.save(user);
+        return toUserDto(user);
     }
 
     @Override

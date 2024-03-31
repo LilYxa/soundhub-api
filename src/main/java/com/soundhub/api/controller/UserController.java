@@ -41,4 +41,14 @@ public class UserController {
         User currentUser = userService.getCurrentUser();
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }
+
+    @PutMapping("/addFriend/{friendId}")
+    public ResponseEntity<User> addFriend(@PathVariable UUID friendId) throws IOException {
+        return ResponseEntity.ok(userService.addFriend(friendId));
+    }
+
+    @PutMapping("/deleteFriend/{friendId}")
+    public ResponseEntity<User> deleteFriend(@PathVariable UUID friendId) throws IOException {
+        return ResponseEntity.ok(userService.deleteFriend(friendId));
+    }
 }

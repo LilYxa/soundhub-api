@@ -3,6 +3,7 @@ package com.soundhub.api.controller;
 import com.soundhub.api.dto.PostDto;
 import com.soundhub.api.model.Post;
 import com.soundhub.api.service.PostService;
+import com.soundhub.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,9 @@ import java.util.UUID;
 public class PostController {
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserService userService;
     @GetMapping("/{postId}")
     public ResponseEntity<PostDto> getPostById(@PathVariable UUID postId) {
         PostDto post = postService.getPostById(postId);
@@ -41,6 +45,11 @@ public class PostController {
                                               @RequestPart(required = false) List<MultipartFile> files,
                                               @RequestPart(required = false) List<String> deleteFiles) throws IOException {
         return ResponseEntity.ok(postService.updatePost(postId, postDto, files, deleteFiles));
+    }
+
+    @PutMapping("/like/{postId}")
+    public ResponseEntity<Post> toggleLike(@PathVariable UUID postId) {
+        return ResponseEntity.ok(postService.toggleLike(postId, userService.getCurrentUser()));
     }
 
     @DeleteMapping("/delete/{postId}")
