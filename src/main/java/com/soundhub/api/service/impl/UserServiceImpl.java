@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -87,7 +88,8 @@ public class UserServiceImpl implements UserService {
                 .description(userDto.getDescription())
                 .languages(userDto.getLanguages())
                 .favoriteGenres(userDto.getFavoriteGenres())
-                .favoriteArtists(userDto.getFavoriteArtists())
+//                .favoriteArtists(userDto.getFavoriteArtists())
+                .favoriteArtistsIds(userDto.getFavoriteArtistsIds())
                 .role(Role.ROLE_USER)
                 .build();
 
@@ -162,20 +164,6 @@ public class UserServiceImpl implements UserService {
         }
         String avatarUrl = baseUrl + Constants.FILE_PATH_PART + fileName;
 
-//        user.setEmail(userDto.getEmail());
-//        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-//        user.setFirstName(userDto.getFirstName());
-//        user.setLastName(userDto.getLastName());
-//        user.setBirthday(userDto.getBirthday());
-//        user.setCity(userDto.getCity());
-//        user.setCountry(userDto.getCountry());
-//        user.setGender(userDto.getGender());
-//        user.setAvatarUrl(avatarUrl);
-//        user.setDescription(userDto.getDescription());
-//        user.setLanguages(userDto.getLanguages());
-//        user.setFavoriteGenres(userDto.getFavoriteGenres());
-//        user.setFavoriteArtists(userDto.getFavoriteArtists());
-
         userMapper.updateUserFromDto(userDto, user);
         user.setAvatarUrl(avatarUrl);
 
@@ -200,6 +188,11 @@ public class UserServiceImpl implements UserService {
         return getUserByEmail(username);
     }
 
+    @Override
+    public List<User> getUsersByIds(List<UUID> ids) {
+        return userRepository.findByUserIds(ids);
+    }
+
     private UserDto toUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
@@ -215,7 +208,7 @@ public class UserServiceImpl implements UserService {
                 .description(user.getDescription())
                 .languages(user.getLanguages())
                 .favoriteGenres(user.getFavoriteGenres())
-                .favoriteArtists(user.getFavoriteArtists())
+                .favoriteArtistsIds(user.getFavoriteArtistsIds())
                 .build();
     }
 }
