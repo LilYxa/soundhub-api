@@ -1,5 +1,6 @@
 package com.soundhub.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.soundhub.api.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class PostDto {
     @NotNull
     private User author;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime publishDate;
 
     @NotBlank
