@@ -35,7 +35,10 @@ public class PostController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<PostDto> addPost(@RequestPart PostDto postDto, @RequestPart List<MultipartFile> files) {
+    public ResponseEntity<PostDto> addPost(
+            @RequestPart PostDto postDto,
+            @RequestPart(required = false) List<MultipartFile> files
+    ) {
         return ResponseEntity.ok(postService.addPost(postDto, files));
     }
 

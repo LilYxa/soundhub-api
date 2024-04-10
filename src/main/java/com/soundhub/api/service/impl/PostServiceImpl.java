@@ -57,9 +57,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto addPost(PostDto postDto, List<MultipartFile> files) {
         User author = userService.getCurrentUser();
-        List<String> fileNames = fileService.uploadFileList(path, files);
+        List<String> fileNames;
         List<String> postImageUrl = new ArrayList<>();
-        fileNames.forEach(f -> postImageUrl.add((f == null) ? null : baseUrl + Constants.FILE_PATH_PART + f));
+        if (files != null) {
+            fileNames = fileService.uploadFileList(path, files);
+            fileNames.forEach(f -> postImageUrl.add((f == null) ? null : baseUrl + Constants.FILE_PATH_PART + f));
+        }
 
         Post post = Post.builder()
                 .author(author)
