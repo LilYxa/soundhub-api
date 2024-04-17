@@ -2,6 +2,7 @@ package com.soundhub.api.dto;
 
 import com.soundhub.api.enums.Gender;
 import com.soundhub.api.model.Genre;
+import com.soundhub.api.model.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,7 +48,7 @@ public class UserDto {
     private String avatarUrl;
     private String description;
     private List<String> languages;
-    private List<UserDto> friends;
+    private List<User> friends;
     private List<Genre> favoriteGenres;
     private List<Integer> favoriteArtistsIds;
 }

@@ -155,7 +155,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByAuthor(UUID authorId) {
-        User user = userMapper.userDtoToUser(userService.getUserById(authorId));
+        User user = userService.getUserById(authorId);
         log.info("getPostsByAuthor[1]: User entity was requested {}", user);
         return postRepository.findAllByAuthor(user);
     }

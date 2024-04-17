@@ -81,6 +81,7 @@ public class User implements UserDetails {
             name = "user_friends",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    @JsonIgnore
     private List<User> friends;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -158,5 +159,26 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthday=" + birthday +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", gender=" + gender +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", languages=" + languages +
+                ", favoriteGenres=" + favoriteGenres +
+                ", favoriteArtistsIds=" + favoriteArtistsIds +
+                ", role=" + role +
+                '}';
     }
 }

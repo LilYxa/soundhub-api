@@ -17,7 +17,7 @@ public interface UserService {
 
     User deleteFriend(UUID friendId) throws IOException;
 
-    UserDto getUserById(UUID id);
+    User getUserById(UUID id);
 
     UUID deleteUser(UUID userId) throws IOException;
 
@@ -32,4 +32,6 @@ public interface UserService {
     Boolean checkEmailAvailability(String email);
 
     User getCurrentUser();
+
+    List<User> getUserFriendsById(UUID id);
 }

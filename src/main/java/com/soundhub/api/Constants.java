@@ -7,6 +7,7 @@ public class Constants {
 
     public static final String CHAT_RESOURCE_NAME = "Chat";
     public static final String MESSAGE_RESOURCE_NAME = "Message";
+    public static final String INVITE_RESOURCE_NAME = "Invite";
 
     public static final String USERNAME_FIELD = "username";
     public static final String EMAIL_FIELD = "email";
@@ -24,6 +25,9 @@ public class Constants {
     public static final String CHAT_NOT_CONTAINS_USER = "This user is not related to this chat";
     public static final String UNAUTHORIZED_ERROR_MESSAGE = "Sorry, You're not authorized to access this resource.";
     public static final String FRIEND_ALREADY_ADDED = "Friend is already in friends list";
+    public static final String INVITE_ALREADY_SENT_MSG = "Invitation for this user has already sent";
+    public static final String USER_ALREADY_FRIEND = "This user is already a friend";
+    public static final String USER_CANNOT_ADD_HIMSELF = "User can't add himself as a friend!";
 
     public static final String PYTHON_EXECUTION_FAILED = "Python script execution failed";
 

@@ -35,7 +35,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat createChat(User sender, UUID recipientId) throws ResourceNotFoundException {
         log.info("createChat[1]: creating a chat, sender ID: {}, recipient ID: {}", sender.getId(), recipientId);
-        User recipient = userMapper.userDtoToUser(userService.getUserById(recipientId));
+        User recipient = userService.getUserById(recipientId);
 
         return chatRepository.findSingleChatByUsers(sender, recipient)
                 .orElseGet(() -> {
@@ -57,7 +57,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<Chat> findAllChatsByUserId(UUID userId) throws ResourceNotFoundException {
-        User user = userMapper.userDtoToUser(userService.getUserById(userId));
+        User user = userService.getUserById(userId);
 
         return chatRepository.findChatsByUserId(user.getId());
     }
@@ -65,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat createGroup(GroupChatRequest req, User creator) {
         List<User> groupParticipants = new ArrayList<>();
-        req.getUserIds().forEach(userId -> groupParticipants.add(userMapper.userDtoToUser(userService.getUserById(userId))));
+        req.getUserIds().forEach(userId -> groupParticipants.add(userService.getUserById(userId)));
 
         Chat groupChat = Chat.builder()
                 .createdBy(creator)
@@ -84,7 +84,7 @@ public class ChatServiceImpl implements ChatService {
         User chatOwner = userService.getCurrentUser();
 
         if (chatOwner.equals(chat.getCreatedBy())) {
-            User user = userMapper.userDtoToUser(userService.getUserById(userId));
+            User user = userService.getUserById(userId);
             chat.getParticipants().add(user);
             chatRepository.save(chat);
         } else {
@@ -102,7 +102,7 @@ public class ChatServiceImpl implements ChatService {
         User chatOwner = userService.getCurrentUser();
 
         if (chatOwner.equals(chat.getCreatedBy())) {
-            User user = userMapper.userDtoToUser(userService.getUserById(userId));
+            User user = userService.getUserById(userId);
             chat.getParticipants().remove(user);
             chatRepository.save(chat);
         } else {

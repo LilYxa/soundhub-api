@@ -1,4 +1,4 @@
-package com.soundhub.api.service.impl;
+package com.soundhub.api.service;
 
 import com.soundhub.api.dto.request.SendMessageRequest;
 import com.soundhub.api.model.Message;

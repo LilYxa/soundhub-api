@@ -4,6 +4,7 @@ import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.RecommendationService;
 import com.soundhub.api.service.UserService;
+import com.soundhub.api.util.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,15 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private RecommendationService recommendationService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable  UUID userId) {
-        UserDto user = userService.getUserById(userId);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        User user = userService.getUserById(userId);
+        return new ResponseEntity<>(userMapper.userToUserDto(user), HttpStatus.OK);
     }
 
     @PutMapping("/update/{userId}")
@@ -70,5 +74,10 @@ public class UserController {
             }
         });
         return new ResponseEntity<>(potentialFriends, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}/friends")
+    public ResponseEntity<List<User>> getUserFriendsById(@PathVariable UUID userId) {
+        return new ResponseEntity<>(userService.getUserFriendsById(userId), HttpStatus.OK);
     }
 }

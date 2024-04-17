@@ -55,11 +55,6 @@ public class UserServiceImpl implements UserService {
     @Value("${base.url}")
     private String baseUrl;
 
-//    @Override
-//    public User addUser(User user) {
-//        return userRepository.save(user);
-//    }
-
     @Override
     public User addUser(UserDto userDto, MultipartFile file) throws IOException {
 //        String avatarUrl = baseUrl + Constants.FILE_PATH_PART + Constants.DEFAULT_USER_AVATAR_NAME;
@@ -88,7 +83,6 @@ public class UserServiceImpl implements UserService {
                 .description(userDto.getDescription())
                 .languages(userDto.getLanguages())
                 .favoriteGenres(userDto.getFavoriteGenres())
-//                .favoriteArtists(userDto.getFavoriteArtists())
                 .favoriteArtistsIds(userDto.getFavoriteArtistsIds())
                 .role(Role.ROLE_USER)
                 .build();
@@ -99,18 +93,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addFriend(UUID friendId) throws IOException {
         User user = getCurrentUser();
-        User newFriend = userRepository.findById(friendId).get();
-        List<User> friendsList = user.getFriends();
-        if(friendsList.contains(newFriend)) {
-            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, FRIEND_ALREADY_ADDED);
-        } else {
-            friendsList.add(newFriend);
-            log.info("addFriend[1]: Friend added successfully ID {}", friendId);
-            user.setFriends(friendsList);
-            log.info("addFriend[2]: Friends list {}", friendsList);
-            updateUser(user.getId(), userMapper.userToUserDto(user));
-            return user;
-        }
+        User newFriend = getUserById(friendId);
+        user.getFriends().add(newFriend);
+        log.info("addFriend[1]: Friend added successfully ID {}", friendId);
+        newFriend.getFriends().add(user);
+        log.info("addFriend[2]: Friends list {}", user.getFriends());
+        userRepository.save(user);
+        userRepository.save(newFriend);
+        return user;
     }
 
     @Override
@@ -125,9 +115,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(UUID id) {
-        return toUserDto(userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.ID_FIELD, id)));
+    public User getUserById(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.ID_FIELD, id));
     }
 
     @Override
@@ -149,7 +139,7 @@ public class UserServiceImpl implements UserService {
                         new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.ID_FIELD, userId));
         userMapper.updateUserFromDto(userDto, user);
         userRepository.save(user);
-        return toUserDto(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override
@@ -169,7 +159,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        return toUserDto(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override
@@ -193,22 +183,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserIds(ids);
     }
 
-    private UserDto toUserDto(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .birthday(user.getBirthday())
-                .city(user.getCity())
-                .country(user.getCountry())
-                .gender(user.getGender())
-                .avatarUrl(user.getAvatarUrl())
-                .description(user.getDescription())
-                .languages(user.getLanguages())
-                .favoriteGenres(user.getFavoriteGenres())
-                .favoriteArtistsIds(user.getFavoriteArtistsIds())
-                .build();
+    @Override
+    public List<User> getUserFriendsById(UUID id) {
+        log.info("getUserFriendsById[1]: getting user's: {} friends", id);
+        User user = getUserById(id);
+        log.info("getUserFriendsById[2]: user: {}", user);
+        log.info("getUserFriendsById[3]: user's friends: {}", user.getFriends());
+        return user.getFriends();
     }
 }

@@ -1,5 +1,6 @@
-package com.soundhub.api.exception;
+package com.soundhub.api.exception.handler;
 
+import com.soundhub.api.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -42,5 +43,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PythonExecutionException.class)
     public ProblemDetail handlePythonExecutionException(PythonExecutionException e) {
         return ProblemDetail.forStatusAndDetail(e.getStatus(), e.getMessage());
+    }
+
+    @ExceptionHandler(InviteAlreadySentException.class)
+    public ProblemDetail handleInviteAlreadySentException(InviteAlreadySentException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 }

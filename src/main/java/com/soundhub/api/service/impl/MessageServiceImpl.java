@@ -9,6 +9,7 @@ import com.soundhub.api.model.Message;
 import com.soundhub.api.model.User;
 import com.soundhub.api.repository.MessageRepository;
 import com.soundhub.api.service.ChatService;
+import com.soundhub.api.service.MessageService;
 import com.soundhub.api.service.UserService;
 import com.soundhub.api.util.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class MessageServiceImpl implements MessageService{
+public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
@@ -37,7 +38,7 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public Message sendMessage(SendMessageRequest request) {
-        User user = userMapper.userDtoToUser(userService.getUserById(request.getUserId()));
+        User user = userService.getUserById(request.getUserId());
         Chat chat = chatService.getChatById(request.getChatId());
 
         Message message = Message.builder()
