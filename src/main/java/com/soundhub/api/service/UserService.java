@@ -34,4 +34,6 @@ public interface UserService {
     User getCurrentUser();
 
     List<User> getUserFriendsById(UUID id);
+
+    List<User> searchByFullName(String name);
 }

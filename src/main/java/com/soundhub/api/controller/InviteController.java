@@ -4,7 +4,7 @@ import com.soundhub.api.model.Invite;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.InviteService;
 import com.soundhub.api.service.UserService;
-import com.soundhub.api.util.UserMapper;
+import com.soundhub.api.util.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

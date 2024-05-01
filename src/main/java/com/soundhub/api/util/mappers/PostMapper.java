@@ -1,4 +1,4 @@
-package com.soundhub.api.util;
+package com.soundhub.api.util.mappers;
 
 import com.soundhub.api.dto.PostDto;
 import com.soundhub.api.model.Post;

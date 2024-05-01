@@ -3,21 +3,18 @@ package com.soundhub.api.service.impl;
 import com.soundhub.api.Constants;
 import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.enums.Role;
-import com.soundhub.api.exception.ApiException;
 import com.soundhub.api.exception.ResourceNotFoundException;
 import com.soundhub.api.model.User;
 import com.soundhub.api.repository.UserRepository;
 import com.soundhub.api.service.FileService;
 import com.soundhub.api.service.UserService;
-import com.soundhub.api.util.UserMapper;
-import jakarta.transaction.Transactional;
+import com.soundhub.api.util.mappers.UserMapper;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,13 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-
-import static com.soundhub.api.Constants.FRIEND_ALREADY_ADDED;
 
 @Service
 @Slf4j
@@ -45,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     private UserMapper userMapper;
@@ -190,5 +186,19 @@ public class UserServiceImpl implements UserService {
         log.info("getUserFriendsById[2]: user: {}", user);
         log.info("getUserFriendsById[3]: user's friends: {}", user.getFriends());
         return user.getFriends();
+    }
+
+    @Override
+    public List<User> searchByFullName(String name) {
+        log.info("searchByFullName[1]: searching users with name: {}", name);
+        if (name.contains(" ")) {
+            String[] parts = name.split("\\s+");
+            String firstName = parts[0];
+            String lastName = parts.length > 1 ? parts[1] : "";
+
+            return userRepository.findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(firstName, lastName);
+        } else {
+            return userRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.soundhub.api.util;
+package com.soundhub.api.util.mappers;
 
 import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.model.User;

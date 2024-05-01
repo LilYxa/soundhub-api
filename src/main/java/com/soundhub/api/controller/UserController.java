@@ -4,7 +4,7 @@ import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.RecommendationService;
 import com.soundhub.api.service.UserService;
-import com.soundhub.api.util.UserMapper;
+import com.soundhub.api.util.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,5 +79,15 @@ public class UserController {
     @GetMapping("/{userId}/friends")
     public ResponseEntity<List<User>> getUserFriendsById(@PathVariable UUID userId) {
         return new ResponseEntity<>(userService.getUserFriendsById(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsersByFullName(@RequestParam String name) throws InterruptedException {
+//        List<User> users = userService.searchUsersByName(name);
+        List<User> users = userService.searchByFullName(name);
+        if (users.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

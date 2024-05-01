@@ -9,7 +9,7 @@ import com.soundhub.api.model.User;
 import com.soundhub.api.repository.ChatRepository;
 import com.soundhub.api.service.ChatService;
 import com.soundhub.api.service.UserService;
-import com.soundhub.api.util.UserMapper;
+import com.soundhub.api.util.mappers.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

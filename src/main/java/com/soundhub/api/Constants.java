@@ -1,5 +1,8 @@
 package com.soundhub.api;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
     public static final String USER_RESOURCE_NAME = "User";
 
@@ -38,4 +41,11 @@ public class Constants {
     public static final String BLACKLIST_CACHE_NAME = "jwt-blacklist";
     public static final String FILE_PATH_PART = "/api/v1/files/";
     public static final String DEFAULT_USER_AVATAR_NAME = "default.jpg";
+
+    public static final List<String> USER_SEARCHABLE_FIELDS = Arrays.asList("firstName", "lastName");
+    public static final int USER_SEARCHABLE_LIMIT = 15;
+
+    public static final int INDEXER_THREAD_NUMBER = 4;
+
+    public static final String INDEX_INTERRUPTED_MESSAGE = "Index interrupted";
 }
