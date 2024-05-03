@@ -15,6 +15,7 @@ public interface InviteService {
     Invite rejectInvite(User inviteRecipient, UUID inviteId);
 
     List<Invite> getAllInvites(User user);
+    List<Invite> getAllInvitesBySenderId(UUID senderId);
 
     Invite deleteInvite(User user, UUID inviteId);
 }

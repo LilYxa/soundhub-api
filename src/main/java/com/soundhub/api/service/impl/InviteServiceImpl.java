@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -103,6 +104,19 @@ public class InviteServiceImpl implements InviteService {
         List<Invite> invites = inviteRepository.findAllByRecipient(user);
         log.info("getAllInvites[2]: invites: {}", invites);
         return invites;
+    }
+
+    @Override
+    public List<Invite> getAllInvitesBySenderId(UUID senderId) {
+        List<Invite> invites = inviteRepository.findAll();
+        log.info("getAllInvitesBySenderId[1]: getting all invites: {}", invites);
+
+        List<Invite> filteredInvites = invites.stream()
+            .filter(invite -> Objects.equals(invite.getSender().getId().toString(), senderId.toString()))
+            .toList();
+
+        log.info("getAllInvitesBySenderId[2]: all invites from sender with id {}: {}", senderId, filteredInvites);
+        return filteredInvites;
     }
 
     @Override

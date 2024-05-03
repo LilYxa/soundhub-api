@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Constants {
+    public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     public static final String USER_RESOURCE_NAME = "User";
 
     public static final String POST_RESOURCE_NAME = "Post";

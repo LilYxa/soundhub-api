@@ -53,6 +53,11 @@ public class InviteController {
         return new ResponseEntity<>(inviteService.getAllInvites(currentUser), HttpStatus.OK);
     }
 
+    @GetMapping("/{senderId}")
+    public ResponseEntity<List<Invite>> getAllInvitesBySenderId(@PathVariable UUID senderId) {
+        return new ResponseEntity<>(inviteService.getAllInvitesBySenderId(senderId), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{inviteId}")
     public ResponseEntity<Invite> deleteInvite(@PathVariable UUID inviteId) {
         User currentUser = userService.getCurrentUser();
