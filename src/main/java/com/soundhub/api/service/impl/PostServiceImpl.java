@@ -101,6 +101,9 @@ public class PostServiceImpl implements PostService {
     public UUID deletePost(UUID postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId));
+        if (!userService.getCurrentUser().equals(post.getAuthor())) {
+            throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
+        }
         List<String> postImages = post.getImages();
         List<String> postImagesUrls = new ArrayList<>();
         postImages.forEach(f -> postImagesUrls.add(f.substring(f.lastIndexOf("/") + 1)));
@@ -121,6 +124,9 @@ public class PostServiceImpl implements PostService {
     public PostDto updatePost(UUID postId, PostDto postDto) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId));
+        if (!userService.getCurrentUser().equals(post.getAuthor())) {
+            throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
+        }
         log.debug("updatePost[1]: Updating post without files replacing ID {}", postId);
         postMapper.updatePostFromDto(postDto, post);
         postRepository.save(post);
@@ -131,26 +137,42 @@ public class PostServiceImpl implements PostService {
     public PostDto updatePost(UUID postId, PostDto postDto, List<MultipartFile> files, List<String> replaceFilesUrls) throws IOException {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId));
+        if (!userService.getCurrentUser().equals(post.getAuthor())) {
+            throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
+        }
         List<String> postImages = new ArrayList<>(post.getImages());
-        List<String> updatedFileNames = fileService.uploadFileList(path, files);
-        List<String> updatedFileNamesUrls = new ArrayList<>();
-        updatedFileNames.forEach(f -> updatedFileNamesUrls.add((f == null) ? null : baseUrl + Constants.FILE_PATH_PART + f));
-        replaceFilesUrls.forEach(f -> {
-            try {
-                Files.deleteIfExists(Paths.get(path + File.separator + f.substring(f.lastIndexOf("/") + 1)));
-                postImages.remove(f);
-                log.debug("updatePost[1]: Updating post {} files deleted {}", postId, f);
-            } catch (IOException e) {
-                throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
-            }
-        });
-        log.debug("updatePost[2]: Updating post: files remain {}", postImages);
-        postImages.addAll(updatedFileNamesUrls);
+        postImages.addAll(addNewFiles(files));
+        deleteReplacingFiles(replaceFilesUrls, postImages);
         postDto.setImages(postImages);
-        log.debug("updatePost[3]: Updating post: files after insert {}", postImages);
+        log.debug("updatePost[1]: Updating post: files after insert {}", postImages);
         postMapper.updatePostFromDto(postDto, post);
         postRepository.save(post);
         return postMapper.toPostDto(post);
+    }
+
+    private List<String> addNewFiles(List<MultipartFile> files) {
+        List<String> updatedFileNamesUrls = new ArrayList<>();
+        if (!(files == null)) {
+            List<String> updatedFileNames = fileService.uploadFileList(path, files);
+            updatedFileNames.forEach(f -> updatedFileNamesUrls.add((f == null) ? null : baseUrl + Constants.FILE_PATH_PART + f));
+        }
+        log.debug("addNewFiles[1]: Files added {} (if empty, no files to add)", updatedFileNamesUrls);
+        return updatedFileNamesUrls;
+    }
+
+    private void deleteReplacingFiles(List<String> replaceFilesUrls, List<String> postImages) {
+        if (!(replaceFilesUrls == null)) {
+            replaceFilesUrls.forEach(f -> {
+                try {
+                    Files.deleteIfExists(Paths.get(path + File.separator + f.substring(f.lastIndexOf("/") + 1)));
+                    postImages.remove(f);
+                    log.debug("deleteReplacingFiles[1]: Files deleted {}", f);
+                } catch (IOException e) {
+                    throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
+                }
+            });
+            log.debug("deleteReplacingFiles[2]: Files remain {}", postImages);
+        }
     }
 
     @Override
