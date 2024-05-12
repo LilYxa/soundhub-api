@@ -103,6 +103,7 @@ public class User implements UserDetails {
 
     @Column(name = "role")
     @Enumerated(value = EnumType.STRING)
+    @JsonIgnore
     private Role role;
 
     @OneToOne(mappedBy = "user")

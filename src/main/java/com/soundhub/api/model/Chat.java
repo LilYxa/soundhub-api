@@ -22,7 +22,7 @@ public class Chat {
     @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "chat_participants",
             joinColumns = @JoinColumn(name = "chat_id"),
@@ -30,10 +30,10 @@ public class Chat {
     )
     private List<User> participants;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User createdBy;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat", fetch = FetchType.EAGER)
     private List<Message> messages;
 
     @Column(name = "is_group")
@@ -45,4 +45,13 @@ public class Chat {
     @Column(name = "chat_name")
     private String chatName;
 
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id=" + id +
+                ", isGroup=" + isGroup +
+                ", chatImage='" + chatImage + '\'' +
+                ", chatName='" + chatName + '\'' +
+                '}';
+    }
 }

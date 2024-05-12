@@ -11,6 +11,7 @@ import com.soundhub.api.repository.InviteRepository;
 import com.soundhub.api.service.InviteService;
 import com.soundhub.api.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -121,5 +122,14 @@ public class InviteServiceImpl implements InviteService {
         invite.setStatus(InviteStatus.DELETED_BY_SENDER);
         log.info("deleteInvite[2]: invite {} was successfully deleted", invite);
         return invite;
+    }
+
+    @Override
+    public Invite getInviteBySenderAndRecipient(UUID senderId, UUID recipientId) {
+        log.info("getInviteBySenderAndRecipient[1]: getting invite sender: {}, recipient: {}", senderId, recipientId);
+        User sender = userService.getUserById(senderId);
+        User recipient = userService.getUserById(recipientId);
+        return inviteRepository.findInviteBySenderAndRecipient(sender, recipient)
+                .orElseThrow(() -> new ResourceNotFoundException(Constants.INVITE_RESOURCE_NAME));
     }
 }

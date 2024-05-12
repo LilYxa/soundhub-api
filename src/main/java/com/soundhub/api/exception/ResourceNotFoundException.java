@@ -1,5 +1,7 @@
 package com.soundhub.api.exception;
 
+import com.soundhub.api.Constants;
+
 public class ResourceNotFoundException extends RuntimeException{
 
     private String resourceName;
@@ -11,6 +13,11 @@ public class ResourceNotFoundException extends RuntimeException{
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;
+    }
+
+    public ResourceNotFoundException(String resourceName) {
+        super(String.format(Constants.RESOURCE_NOT_EXIST, resourceName));
+        this.resourceName = resourceName;
     }
 
     public String getResourceName() {

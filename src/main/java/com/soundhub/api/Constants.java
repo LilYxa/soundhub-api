@@ -23,6 +23,7 @@ public class Constants {
     public static final String SUCCESSFUL_LOGOUT = "You have successfully logged out";
     public static final String INVALID_EMAIL_PASSWORD = "Invalid email or password";
     public static final String FILE_ALREADY_EXISTS = "This file already exist! Please enter another file name.";
+    public static final String RESOURCE_NOT_EXIST = "Resource %s not found";
     public static final String PERMISSION_MESSAGE = "You don't have permissions for this operation.";
     public static final String CHAT_DELETE_SUCCESS_MSG = "Chat with id: %s was successfully deleted";
     public static final String CHAT_NOT_CONTAINS_USER = "This user is not related to this chat";
@@ -43,9 +44,10 @@ public class Constants {
     public static final String DEFAULT_USER_AVATAR_NAME = "default.jpg";
 
     public static final List<String> USER_SEARCHABLE_FIELDS = Arrays.asList("firstName", "lastName");
-    public static final int USER_SEARCHABLE_LIMIT = 15;
 
-    public static final int INDEXER_THREAD_NUMBER = 4;
+    public static final String FOLDER_NAME_PARAM = "?folderName=";
+
+    public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static final String INDEX_INTERRUPTED_MESSAGE = "Index interrupted";
 }

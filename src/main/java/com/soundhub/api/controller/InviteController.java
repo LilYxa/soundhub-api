@@ -58,4 +58,9 @@ public class InviteController {
         User currentUser = userService.getCurrentUser();
         return new ResponseEntity<>(inviteService.deleteInvite(currentUser, inviteId), HttpStatus.OK);
     }
+
+    @GetMapping("/{senderId}/{recipientId}")
+    public ResponseEntity<Invite> getInviteBySenderAndRecipient(@PathVariable UUID senderId, @PathVariable UUID recipientId) {
+        return new ResponseEntity<>(inviteService.getInviteBySenderAndRecipient(senderId, recipientId), HttpStatus.OK);
+    }
 }

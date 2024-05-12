@@ -1,5 +1,7 @@
 package com.soundhub.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.soundhub.api.Constants;
 import com.soundhub.api.enums.InviteStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ public class Invite {
     private UUID id;
 
     @Column(name = "created_datetime")
+    @JsonFormat(pattern = Constants.LOCAL_DATETIME_FORMAT)
     private LocalDateTime createdDateTime;
 
     @ManyToOne
