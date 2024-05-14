@@ -62,11 +62,11 @@ public class UserController {
         return ResponseEntity.ok(userService.deleteFriend(friendId));
     }
 
-    @GetMapping("/{userId}/recommendedFriends")
-    public ResponseEntity<List<User>> getRecommendedFriends(@PathVariable UUID userId) {
+    @GetMapping("/recommendedFriends")
+    public ResponseEntity<List<User>> getRecommendedFriends() {
         User currentUser = userService.getCurrentUser();
         List<User> potentialFriends = new ArrayList<>();
-        List<UUID> ids = recommendationService.recommendUsers(userId);
+        List<UUID> ids = recommendationService.recommendUsers(currentUser.getId());
         List<User> rawFriends = userService.getUsersByIds(ids);
         rawFriends.forEach(friend -> {
             if (!currentUser.getFriends().contains(friend)) {

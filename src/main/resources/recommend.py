@@ -7,7 +7,7 @@ import uuid
 import sys
 from sys import argv
 from dotenv import dotenv_values
-config = dotenv_values("src\main\\resources\\application.properties")
+config = dotenv_values("src/main/resources/application.properties")
 
 def potentialFriends(user_id, neigh):
     # Создаем подключение
@@ -32,7 +32,8 @@ def potentialFriends(user_id, neigh):
         distances, indices = knn.kneighbors(genres_encoded[user_index])
         # Извлекаем userId ближайших соседей
         neighbors_userIds = df.iloc[indices[0]]['user_id'].tolist()
-        neighbors_userIds.remove(user_id)
+        if user_id in neighbors_userIds:
+            neighbors_userIds.remove(user_id)
         for i in neighbors_userIds:
             print(str(i))
         return neighbors_userIds
