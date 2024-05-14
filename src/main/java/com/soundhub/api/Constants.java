@@ -43,11 +43,10 @@ public class Constants {
     public static final String FILE_PATH_PART = "/api/v1/files/";
     public static final String DEFAULT_USER_AVATAR_NAME = "default.jpg";
 
-    public static final List<String> USER_SEARCHABLE_FIELDS = Arrays.asList("firstName", "lastName");
-
     public static final String FOLDER_NAME_PARAM = "?folderName=";
 
     public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    public static final String INDEX_INTERRUPTED_MESSAGE = "Index interrupted";
+    public static final String PYTHON = "python3";
+    public static final String PATH_TO_PYTHON_SCRIPT = "src/main/resources/recommend.py";
 }

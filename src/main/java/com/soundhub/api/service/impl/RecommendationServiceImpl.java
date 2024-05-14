@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -27,49 +28,36 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public List<UUID> recommendUsers(UUID targetUser) {
         log.info("recommendUsers[1]: searching friends for user with id: {}", targetUser);
-        List<UUID> potentialFriends = new ArrayList<>();
-        int neigh = 3;
-
         try {
-            // Строим команду для выполнения Python-скрипта
-            List<String> command = new ArrayList<>();
-            command.add("python3"); // Используем команду "python3"
-            command.add("src/main/resources/recommend.py"); // Путь к Python-скрипту
-
-            // Добавляем аргументы командной строки
-            command.add(targetUser.toString()); // Первый аргумент - UUID пользователя
-            command.add(Integer.toString(neigh)); // Второй аргумент - количество соседей
-
-            // Создаем процесс с помощью ProcessBuilder
-            ProcessBuilder pb = new ProcessBuilder(command);
-            Process process = pb.start();
-
-//            Pattern pattern = Pattern.compile("'(.*?)'");
-
-            // Получаем вывод скрипта
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-//                Matcher matcher = pattern.matcher(line);
-//
-//                while (matcher.find()) {
-//                    potentialFriends.add(UUID.fromString(matcher.group(1)));
-//                }
-                potentialFriends.add(UUID.fromString(line));
-
-            }
-
-            // Ждем завершения процесса
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                log.error("recommendUsers[1]: error during python execution");
-                throw new PythonExecutionException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.PYTHON_EXECUTION_FAILED);
-            }
+            return executePythonScript(targetUser);
         } catch (Exception e) {
             log.error("recommendUsers[2]: error: {}", e.getMessage());
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
 
+    private List<String> buildPythonCommand(UUID targetUser) {
+        return Arrays.asList(Constants.PYTHON, Constants.PATH_TO_PYTHON_SCRIPT, targetUser.toString());
+    }
+
+    private List<UUID> executePythonScript(UUID targetUser) throws Exception {
+        List<UUID> potentialFriends = new ArrayList<>();
+        List<String> command = buildPythonCommand(targetUser);
+        Process process = new ProcessBuilder(command).start();
+        String line = "";
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            while ((line = reader.readLine()) != null) {
+                potentialFriends.add(UUID.fromString(line));
+            }
+        } catch (Exception e) {
+            log.error("executePythonScript[1]: error: {}", e.getMessage());
+            throw new Exception(line);
+        }
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            log.error("executePythonScript[2]: Python script execution failed with exit code {}", exitCode);
+            throw new PythonExecutionException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.PYTHON_EXECUTION_FAILED);
+        }
         return potentialFriends;
     }
 }
