@@ -46,10 +46,9 @@ public class ChatController {
         return new ResponseEntity<>(chat, HttpStatus.OK);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<List<Chat>> findChatsByUserId() {
-        User currentUser = userService.getCurrentUser();
-        List<Chat> currentUserChats = chatService.findAllChatsByUserId(currentUser.getId());
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Chat>> findChatsByUserId(@PathVariable UUID userId) {
+        List<Chat> currentUserChats = chatService.findAllChatsByUserId(userId);
         return new ResponseEntity<>(currentUserChats, HttpStatus.OK);
     }
 
