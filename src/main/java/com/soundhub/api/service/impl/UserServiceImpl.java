@@ -23,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,16 +53,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(UserDto userDto, MultipartFile file) throws IOException {
-//        String avatarUrl = baseUrl + Constants.FILE_PATH_PART + Constants.DEFAULT_USER_AVATAR_NAME;
-//
-//        if (file != null) {
-//            if (Files.exists(Paths.get(path + File.separator + file.getOriginalFilename()))) {
-//                throw new ApiException(HttpStatus.BAD_REQUEST, Constants.FILE_ALREADY_EXISTS);
-//            }
-//
-//            String uploadedFilename = fileService.uploadFile(path, file);
-//            avatarUrl = baseUrl + Constants.FILE_PATH_PART + uploadedFilename;
-//        }
         String uploadedFilename = (file == null) ? null : fileService.uploadFile(path, file);
         String avatarUrl = (uploadedFilename == null) ? null : baseUrl + Constants.FILE_PATH_PART + uploadedFilename;
 
@@ -200,5 +190,18 @@ public class UserServiceImpl implements UserService {
         } else {
             return userRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name);
         }
+    }
+
+    @Override
+    public User toggleUserOnline() {
+        User currentUser = getCurrentUser();
+        currentUser.setOnline(!currentUser.isOnline());
+
+        if (!currentUser.isOnline())
+            currentUser.setLastOnline(LocalDateTime.now());
+        else currentUser.setLastOnline(null);
+
+        userRepository.save(currentUser);
+        return currentUser;
     }
 }

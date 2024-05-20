@@ -1,6 +1,11 @@
 package com.soundhub.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.soundhub.api.Constants;
 import com.soundhub.api.enums.Gender;
 import com.soundhub.api.enums.Role;
 import com.soundhub.api.security.RefreshToken;
@@ -17,6 +22,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -53,6 +59,7 @@ public class User implements UserDetails {
 
     @NotNull
     @Column(name = "birthday")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthday;
 
     @Column(name = "city")
@@ -88,27 +95,28 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-//    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
     private List<Genre> favoriteGenres;
 
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "user_favorite_artists",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "artist_id"))
-//    @Cascade(value = org.hibernate.annotations.CascadeType.ALL)
-//    private List<Artist> favoriteArtists;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Integer> favoriteArtistsIds;
 
     @Column(name = "role")
     @Enumerated(value = EnumType.STRING)
     @JsonIgnore
-    private Role role;
+    private Role role = Role.ROLE_USER;
 
     @OneToOne(mappedBy = "user")
     @JsonIgnore
     private RefreshToken refreshToken;
+
+    @Column(name = "is_online")
+    @NotNull
+    private boolean isOnline = false;
+
+    @Column(name = "last_online")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = Constants.LOCAL_DATETIME_FORMAT)
+    private LocalDateTime lastOnline;
 
     public User(String email, String password,
                 String firstName, String lastName, LocalDate birthday,
