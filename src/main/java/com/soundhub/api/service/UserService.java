@@ -2,7 +2,6 @@ package com.soundhub.api.service;
 
 import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.model.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,4 +35,6 @@ public interface UserService {
     List<User> getUserFriendsById(UUID id);
 
     List<User> searchByFullName(String name);
+
+    User toggleUserOnline();
 }

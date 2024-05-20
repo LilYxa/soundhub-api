@@ -99,6 +99,8 @@ public class MessageServiceImpl implements MessageService {
     public Message markMessageAsRead(UUID messageId) {
         Message message = findMessageById(messageId);
         message.setIsRead(true);
+        messageRepository.save(message);
+
         return message;
     }
 }
