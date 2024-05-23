@@ -83,11 +83,15 @@ public class UserController {
 
     @GetMapping("/search")
     public ResponseEntity<List<User>> searchUsersByFullName(@RequestParam String name) throws InterruptedException {
-//        List<User> users = userService.searchUsersByName(name);
         List<User> users = userService.searchByFullName(name);
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PutMapping("/toggleOnline")
+    public ResponseEntity<User> toggleUserOnline() {
+        return new ResponseEntity<>(userService.toggleUserOnline(), HttpStatus.OK);
     }
 }
