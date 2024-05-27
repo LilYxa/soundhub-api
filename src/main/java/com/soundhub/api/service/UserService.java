@@ -5,11 +5,12 @@ import com.soundhub.api.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-//    User addUser(User user);
+    //    User addUser(User user);
     User addUser(UserDto userDto, MultipartFile file) throws IOException;
 
     User addFriend(UUID friendId) throws IOException;
@@ -37,4 +38,6 @@ public interface UserService {
     List<User> searchByFullName(String name);
 
     User toggleUserOnline();
+
+    HashMap<User, Float> findCompatibilityPercentage(List<UUID> listUsersCompareWith);
 }

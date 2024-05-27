@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -93,5 +94,10 @@ public class UserController {
     @PutMapping("/toggleOnline")
     public ResponseEntity<User> toggleUserOnline() {
         return new ResponseEntity<>(userService.toggleUserOnline(), HttpStatus.OK);
+    }
+
+    @GetMapping("/compatibleUsers")
+    public ResponseEntity<HashMap<User, Float>> findCompatibilityPercentage(@RequestPart List<UUID> listUsersCompareWith) {
+        return new ResponseEntity<>(userService.findCompatibilityPercentage(listUsersCompareWith), HttpStatus.OK);
     }
 }

@@ -5,9 +5,13 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.neighbors import NearestNeighbors
 import uuid
 import sys
+import os
 from sys import argv
 from dotenv import dotenv_values
-config = dotenv_values("src/main/resources/application.properties")
+
+res_path = os.path.dirname(__file__)
+filepath = os.path.join(res_path, "application.properties")
+config = dotenv_values(filepath)
 
 def potentialFriends(user_id, neigh):
     # Создаем подключение

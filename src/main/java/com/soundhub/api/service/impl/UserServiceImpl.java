@@ -24,8 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -203,5 +202,30 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(currentUser);
         return currentUser;
+    }
+
+    @Override
+    public HashMap<User, Float> findCompatibilityPercentage(List<UUID> listUsersCompareWith) {
+        User userCompareTo = getCurrentUser();
+        List<User> usersCompareWith = getUsersByIds(listUsersCompareWith);
+        HashMap<User, Float> listUsersPercent = new HashMap<>();
+        usersCompareWith.forEach(userCompareWith -> {
+            List<Integer> artistsCompareTo = userCompareTo.getFavoriteArtistsIds();
+            List<Integer> artistsCompareToCopy = new ArrayList<>(artistsCompareTo);
+            List<Integer> artistsCompareWith = userCompareWith.getFavoriteArtistsIds();
+
+            log.debug("findCompatibilityPercentage[1]: artists of userCompareTo: {} and copy {}, artists of userCompareWith {} {}", artistsCompareTo, artistsCompareToCopy, userCompareWith.getId(), artistsCompareWith);
+            artistsCompareTo.retainAll(artistsCompareWith);
+            log.debug("findCompatibilityPercentage[2]: artists in both lists: {}", artistsCompareTo);
+
+            Set<Integer> artistsTotal = new HashSet<>() {{
+                addAll(artistsCompareWith);
+                addAll(artistsCompareToCopy);
+            }};
+            log.debug("findCompatibilityPercentage[3]: all artists list: {}", artistsCompareToCopy);
+            listUsersPercent.put(userCompareWith, (((float) artistsCompareTo.size() / (float) artistsTotal.size()) * 100));
+        });
+        log.debug("findCompatibilityPercentage[4]: list (userCompareWith: percent): {}", listUsersPercent);
+        return listUsersPercent;
     }
 }
