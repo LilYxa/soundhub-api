@@ -33,7 +33,7 @@ public class Chat {
     @ManyToOne(fetch = FetchType.EAGER)
     private User createdBy;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "chat", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "chat", fetch = FetchType.EAGER)
     private List<Message> messages;
 
     @Column(name = "is_group")

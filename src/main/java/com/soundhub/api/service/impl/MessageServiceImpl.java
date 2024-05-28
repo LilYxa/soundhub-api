@@ -15,6 +15,7 @@ import com.soundhub.api.util.mappers.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,11 +72,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    @Transactional
     public UUID deleteMessageById(UUID messageId, User reqUser) {
         Message message = findMessageById(messageId);
 
         if (message.getSender().getId().equals(reqUser.getId())) {
-            messageRepository.delete(message);
+            messageRepository.deleteById(message.getId());
         } else {
             throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
         }
