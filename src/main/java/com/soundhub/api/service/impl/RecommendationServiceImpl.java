@@ -9,14 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -24,6 +23,14 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Autowired
     private UserService userService;
+
+    @Override
+    public List<UUID> getUsers(UUID user) throws Exception {
+        final String uri = Constants.PATH_TO_PYTHON_API+user;
+        RestTemplate restTemplate = new RestTemplate();
+        List<UUID> result = restTemplate.getForObject(uri, List.class);
+        return result;
+    }
 
     @Override
     public List<UUID> recommendUsers(UUID targetUser) {

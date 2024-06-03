@@ -50,4 +50,5 @@ public class Constants {
 
     public static final String PYTHON = "python3.8";
     public static final String PATH_TO_PYTHON_SCRIPT = "src/main/resources/recommend.py";
+    public static final String PATH_TO_PYTHON_API = "http://localhost:8888/recommend/";
 }

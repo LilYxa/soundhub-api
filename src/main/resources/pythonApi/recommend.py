@@ -9,11 +9,14 @@ import os
 from sys import argv
 from dotenv import dotenv_values
 
-res_path = os.path.dirname(__file__)
+path = os.getcwd()
+res_path = os.path.abspath(os.path.join(path, os.pardir))
 filepath = os.path.join(res_path, "application.properties")
+
 config = dotenv_values(filepath)
 
-def potentialFriends(user_id, neigh):
+def potentialFriends(user_id, neigh=5):
+    # user_id=uuid.UUID("afa93839-d3a0-4dd4-bb27-054be6f0d005")
     # Создаем подключение
     engine = engine_init()
     try:
@@ -43,7 +46,7 @@ def potentialFriends(user_id, neigh):
         return neighbors_userIds
     except Exception as e:
         print(f"Python error: {e}")
-        return e
+        return f"Python error: {e}"
     finally:
         # Закрываем подключение
         engine.dispose()
@@ -58,9 +61,9 @@ def engine_init():
     db_connection_string = clean_url[:first_slash_index+2] + f"{db_user}:{db_password}@" + clean_url[first_slash_index+2:]
     return create_engine(db_connection_string)
 
-if __name__ == '__main__':
+def main(user_id):
     try:
-        user = uuid.UUID(argv[1])
+        user = user_id
     except:
         print("User is not defined!")
         sys.exit()
@@ -69,4 +72,12 @@ if __name__ == '__main__':
         neigh = int(argv[2])
     except:
         neigh = int(config['python.neighbors.default'])
-    potentialFriends(user, neigh)
+
+    try:
+        friendsList = potentialFriends(user, neigh)
+        if type(friendsList) != type("str"):
+            return friendsList
+        else:
+            return f"Exception {friendsList}"
+    except Exception as e:
+        return f"Exception {e}"

@@ -64,10 +64,11 @@ public class UserController {
     }
 
     @GetMapping("/recommendedFriends")
-    public ResponseEntity<List<User>> getRecommendedFriends() {
+    public ResponseEntity<List<User>> getRecommendedFriends() throws Exception {
         User currentUser = userService.getCurrentUser();
         List<User> potentialFriends = new ArrayList<>();
-        List<UUID> ids = recommendationService.recommendUsers(currentUser.getId());
+        List<UUID> ids = recommendationService.getUsers(currentUser.getId());
+        //        List<UUID> ids = recommendationService.recommendUsers(currentUser.getId());
         List<User> rawFriends = userService.getUsersByIds(ids);
         rawFriends.forEach(friend -> {
             if (!currentUser.getFriends().contains(friend)) {
