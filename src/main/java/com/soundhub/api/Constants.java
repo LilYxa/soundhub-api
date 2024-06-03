@@ -36,6 +36,7 @@ public class Constants {
     public static final String PYTHON_EXECUTION_FAILED = "Python script execution failed";
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+    public static final String DELETER_ID_HEADER = "DeleterId";
     public static final String BEARER_PREFIX = "Bearer ";
 
     public static final String BLACKLIST_KEY_PREFIX = "blacklist:";
@@ -47,6 +48,6 @@ public class Constants {
 
     public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    public static final String PYTHON = "python3";
+    public static final String PYTHON = "python3.8";
     public static final String PATH_TO_PYTHON_SCRIPT = "src/main/resources/recommend.py";
 }

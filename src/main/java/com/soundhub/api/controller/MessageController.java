@@ -1,7 +1,9 @@
 package com.soundhub.api.controller;
 
+import com.soundhub.api.Constants;
 import com.soundhub.api.dto.ChatNotificationDto;
 import com.soundhub.api.dto.request.SendMessageRequest;
+import com.soundhub.api.exception.ApiException;
 import com.soundhub.api.model.Message;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.UserService;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,9 +58,15 @@ public class MessageController {
     }
 
     @MessageMapping("/message/delete/{messageId}")
-    public void deleteMessage(@DestinationVariable UUID messageId) {
-        User currentUser = userService.getCurrentUser();
-        UUID deletedMsgId = messageService.deleteMessageById(messageId, currentUser);
+    public void deleteMessage(@DestinationVariable UUID messageId, SimpMessageHeaderAccessor headerAccessor) {
+//        User currentUser = userService.getCurrentUser();
+        String userId = headerAccessor.getFirstNativeHeader(Constants.DELETER_ID_HEADER);
+        if (userId == null) {
+            throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
+        }
+        User user = userService.getUserById(UUID.fromString(userId));
+
+        UUID deletedMsgId = messageService.deleteMessageById(messageId, user);
         messagingTemplate.convertAndSend("/queue/messages/delete", deletedMsgId);
     }
 
