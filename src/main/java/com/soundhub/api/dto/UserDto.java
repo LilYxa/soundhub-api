@@ -1,5 +1,9 @@
 package com.soundhub.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.soundhub.api.Constants;
 import com.soundhub.api.enums.Gender;
 import com.soundhub.api.model.Genre;
 import com.soundhub.api.model.User;
@@ -13,6 +17,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,4 +56,11 @@ public class UserDto {
     private List<User> friends;
     private List<Genre> favoriteGenres;
     private List<Integer> favoriteArtistsIds;
+
+    @NotNull
+    private Boolean isOnline;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = Constants.LOCAL_DATETIME_FORMAT)
+    private LocalDateTime lastOnline;
 }

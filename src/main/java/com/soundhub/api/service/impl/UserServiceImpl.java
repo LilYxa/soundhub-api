@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
                 .languages(userDto.getLanguages())
                 .favoriteGenres(userDto.getFavoriteGenres())
                 .favoriteArtistsIds(userDto.getFavoriteArtistsIds())
+                .isOnline(true)
                 .role(Role.ROLE_USER)
                 .build();
 

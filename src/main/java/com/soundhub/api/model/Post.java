@@ -1,6 +1,7 @@
 package com.soundhub.api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.soundhub.api.Constants;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,7 @@ public class Post {
     private User author;
 
     @Column(name = "publishDate")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = Constants.LOCAL_DATETIME_FORMAT)
     private LocalDateTime publishDate;
 
     @Column(name = "content")
