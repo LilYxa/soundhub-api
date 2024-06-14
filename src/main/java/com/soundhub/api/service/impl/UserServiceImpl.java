@@ -1,7 +1,9 @@
 package com.soundhub.api.service.impl;
 
 import com.soundhub.api.Constants;
+import com.soundhub.api.dto.UserCompatibilityDto;
 import com.soundhub.api.dto.UserDto;
+import com.soundhub.api.dto.response.CompatibleUsersResponse;
 import com.soundhub.api.enums.Role;
 import com.soundhub.api.exception.ResourceNotFoundException;
 import com.soundhub.api.model.User;
@@ -205,7 +207,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public HashMap<User, Float> findCompatibilityPercentage(List<UUID> listUsersCompareWith) {
+    public CompatibleUsersResponse findCompatibilityPercentage(List<UUID> listUsersCompareWith) {
         User userCompareTo = getCurrentUser();
         List<User> usersCompareWith = getUsersByIds(listUsersCompareWith);
         HashMap<User, Float> listUsersPercent = new HashMap<>();
@@ -223,9 +225,25 @@ public class UserServiceImpl implements UserService {
                 addAll(artistsCompareToCopy);
             }};
             log.debug("findCompatibilityPercentage[3]: all artists list: {}", artistsCompareToCopy);
-            listUsersPercent.put(userCompareWith, (((float) artistsCompareTo.size() / (float) artistsTotal.size()) * 100));
+            float compatibility = 0;
+            if (!artistsTotal.isEmpty()) {
+                compatibility = (((float) artistsCompareTo.size() / (float) artistsTotal.size()) * 100);
+            }
+
+            listUsersPercent.put(userCompareWith, compatibility);
         });
         log.debug("findCompatibilityPercentage[4]: list (userCompareWith: percent): {}", listUsersPercent);
-        return listUsersPercent;
+
+        List<UserCompatibilityDto> userCompatibilityList = new ArrayList<>();
+        listUsersPercent.forEach((user, compatibility) -> {
+            UserCompatibilityDto dto = UserCompatibilityDto.builder()
+                    .user(user)
+                    .compatibility(compatibility)
+                    .build();
+
+            userCompatibilityList.add(dto);
+        });
+
+        return new CompatibleUsersResponse(userCompatibilityList);
     }
 }

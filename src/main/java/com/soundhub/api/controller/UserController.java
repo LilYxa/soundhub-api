@@ -1,6 +1,8 @@
 package com.soundhub.api.controller;
 
 import com.soundhub.api.dto.UserDto;
+import com.soundhub.api.dto.request.CompatibleUsersRequest;
+import com.soundhub.api.dto.response.CompatibleUsersResponse;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.RecommendationService;
 import com.soundhub.api.service.UserService;
@@ -13,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,8 +98,8 @@ public class UserController {
         return new ResponseEntity<>(userService.toggleUserOnline(), HttpStatus.OK);
     }
 
-    @GetMapping("/compatibleUsers")
-    public ResponseEntity<HashMap<User, Float>> findCompatibilityPercentage(@RequestPart List<UUID> listUsersCompareWith) {
-        return new ResponseEntity<>(userService.findCompatibilityPercentage(listUsersCompareWith), HttpStatus.OK);
+    @PostMapping("/compatibleUsers")
+    public ResponseEntity<CompatibleUsersResponse> findCompatibilityPercentage(@RequestBody CompatibleUsersRequest requestBody) {
+        return new ResponseEntity<>(userService.findCompatibilityPercentage(requestBody.getListUsersCompareWith()), HttpStatus.OK);
     }
 }
