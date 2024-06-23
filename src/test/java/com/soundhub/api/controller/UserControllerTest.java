@@ -1,6 +1,9 @@
 package com.soundhub.api.controller;
 
+import com.soundhub.api.dto.UserCompatibilityDto;
 import com.soundhub.api.dto.UserDto;
+import com.soundhub.api.dto.request.CompatibleUsersRequest;
+import com.soundhub.api.dto.response.CompatibleUsersResponse;
 import com.soundhub.api.exception.ResourceNotFoundException;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.RecommendationService;
@@ -280,16 +283,20 @@ public class UserControllerTest {
     public void testFindCompatibilityPercentage() {
         log.debug("testFindCompatibilityPercentage[1]: start test");
         List<UUID> userIds = List.of(userId);
-        HashMap<User, Float> compatibilityMap = new HashMap<>();
-        compatibilityMap.put(mockUser, 95.0f);
+        CompatibleUsersResponse compatibleUsersResponse = CompatibleUsersResponse.builder()
+                .userCompatibilities(List.of(UserCompatibilityDto.builder()
+                        .user(mockUser)
+                        .compatibility(95.5f)
+                        .build())).build();
 
-        when(userService.findCompatibilityPercentage(userIds)).thenReturn(compatibilityMap);
+        when(userService.findCompatibilityPercentage(userIds)).thenReturn(compatibleUsersResponse);
 
-        ResponseEntity<HashMap<User, Float>> response = userController.findCompatibilityPercentage(userIds);
+        ResponseEntity<CompatibleUsersResponse> response = userController.findCompatibilityPercentage(CompatibleUsersRequest.builder()
+                .listUsersCompareWith(userIds).build());
         log.debug("testFindCompatibilityPercentage[2]: response: {}", response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(compatibilityMap, response.getBody());
+        assertEquals(compatibleUsersResponse, response.getBody());
         verify(userService, times(1)).findCompatibilityPercentage(userIds);
     }
 
@@ -388,7 +395,8 @@ public class UserControllerTest {
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
             when(userService.findCompatibilityPercentage(userIds)).thenThrow(new ResourceNotFoundException("User", "id", userId));
 
-            ResponseEntity<HashMap<User, Float>> response = userController.findCompatibilityPercentage(userIds);
+            ResponseEntity<CompatibleUsersResponse> response = userController.findCompatibilityPercentage(CompatibleUsersRequest.builder()
+                    .listUsersCompareWith(userIds).build());
             log.debug("testFindCompatibilityPercentageNotFound[2]: response: {}", response);
             assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
             assertNull(response.getBody());
