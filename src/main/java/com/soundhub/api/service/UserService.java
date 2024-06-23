@@ -1,11 +1,11 @@
 package com.soundhub.api.service;
 
 import com.soundhub.api.dto.UserDto;
+import com.soundhub.api.dto.response.CompatibleUsersResponse;
 import com.soundhub.api.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,5 +39,5 @@ public interface UserService {
 
     User toggleUserOnline();
 
-    HashMap<User, Float> findCompatibilityPercentage(List<UUID> listUsersCompareWith);
+    CompatibleUsersResponse findCompatibilityPercentage(List<UUID> listUsersCompareWith);
 }

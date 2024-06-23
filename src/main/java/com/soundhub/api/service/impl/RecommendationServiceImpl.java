@@ -25,7 +25,8 @@ public class RecommendationServiceImpl implements RecommendationService {
     private UserService userService;
 
     @Override
-    public List<UUID> getUsers(UUID user) {
+    public List<UUID> getUsers(UUID user) throws Exception {
+        log.info("recommendUsers[1]: searching friends for user with id: {}", user);
         final String uri = Constants.PATH_TO_PYTHON_API+user;
         RestTemplate restTemplate = new RestTemplate();
         List<UUID> result = restTemplate.getForObject(uri, List.class);

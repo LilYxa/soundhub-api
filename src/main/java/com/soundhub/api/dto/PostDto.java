@@ -1,6 +1,8 @@
 package com.soundhub.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.soundhub.api.Constants;
 import com.soundhub.api.model.User;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +28,7 @@ public class PostDto {
     private User author;
 
     @JsonFormat(pattern = Constants.LOCAL_DATETIME_FORMAT)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime publishDate;
 
     @NotBlank
