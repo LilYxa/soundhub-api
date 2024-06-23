@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/recommendedFriends")
-    public ResponseEntity<List<User>> getRecommendedFriends() throws Exception {
+    public ResponseEntity<List<User>> getRecommendedFriends() {
         User currentUser = userService.getCurrentUser();
         List<User> potentialFriends = new ArrayList<>();
         List<UUID> ids = recommendationService.getUsers(currentUser.getId());
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<User>> searchUsersByFullName(@RequestParam String name) throws InterruptedException {
+    public ResponseEntity<List<User>> searchUsersByFullName(@RequestParam String name) {
         List<User> users = userService.searchByFullName(name);
         if (users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(UUID userId, UserDto userDto) throws IOException {
+    public UserDto updateUser(UUID userId, UserDto userDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException(Constants.USER_RESOURCE_NAME, Constants.ID_FIELD, userId));
