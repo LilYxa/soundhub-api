@@ -7,6 +7,7 @@ import com.soundhub.api.dto.response.LogoutResponse;
 import com.soundhub.api.security.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +18,8 @@ import java.io.IOException;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthenticationService authenticationService;
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @PostMapping("/sign-up")
     public ResponseEntity<AuthResponse> signUp(@RequestPart(name = "userData") @Valid UserDto userDto,

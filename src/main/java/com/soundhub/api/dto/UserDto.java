@@ -1,7 +1,10 @@
 package com.soundhub.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.soundhub.api.Constants;
 import com.soundhub.api.enums.Gender;
@@ -45,6 +48,8 @@ public class UserDto {
     private String lastName;
 
     @NotNull
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate birthday;
 
     private String city;
