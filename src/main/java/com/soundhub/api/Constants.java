@@ -1,8 +1,5 @@
 package com.soundhub.api;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class Constants {
     public static final String USER_RESOURCE_NAME = "User";
 
@@ -47,6 +44,8 @@ public class Constants {
     public static final String FOLDER_NAME_PARAM = "?folderName=";
 
     public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String FILE_REQUEST_PART_ID = "files";
+    public static final String DELETE_FILE_LIST_REQUEST_PART_ID = "deleteFiles";
 
     public static final String PYTHON = "python3.8";
     public static final String PATH_TO_PYTHON_SCRIPT = "src/main/resources/recommend.py";

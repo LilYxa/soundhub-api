@@ -1,5 +1,6 @@
 package com.soundhub.api.controller;
 
+import com.soundhub.api.Constants;
 import com.soundhub.api.dto.PostDto;
 import com.soundhub.api.model.Post;
 import com.soundhub.api.service.PostService;
@@ -45,10 +46,19 @@ public class PostController {
     }
 
     @PutMapping("/update/{postId}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable UUID postId,
-                                              @RequestPart PostDto postDto,
-                                              @RequestPart(required = false, name = "files") List<MultipartFile> files,
-                                              @RequestPart(required = false, name = "deleteFiles") List<String> deleteFiles) throws IOException {
+    public ResponseEntity<PostDto> updatePost(
+            @PathVariable UUID postId,
+            @RequestPart PostDto postDto,
+            @RequestPart(
+                required = false,
+                name = Constants.FILE_REQUEST_PART_ID
+            ) List<MultipartFile> files,
+            @RequestPart(
+                required = false,
+                name = Constants.DELETE_FILE_LIST_REQUEST_PART_ID
+            )
+            List<String> deleteFiles
+    ) throws IOException {
         if ((files == null) && (deleteFiles == null)) {
             log.info("updatePost[1] controller: Post updated without files, post ID: {}", postId);
             return ResponseEntity.ok(postService.updatePost(postId, postDto));
