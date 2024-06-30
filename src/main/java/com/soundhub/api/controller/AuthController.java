@@ -1,5 +1,6 @@
 package com.soundhub.api.controller;
 
+import com.soundhub.api.Constants;
 import com.soundhub.api.dto.*;
 import com.soundhub.api.dto.request.RefreshTokenRequest;
 import com.soundhub.api.dto.response.AuthResponse;
@@ -22,8 +23,13 @@ public class AuthController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<AuthResponse> signUp(@RequestPart(name = "userData") @Valid UserDto userDto,
-                                               @RequestPart(required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<AuthResponse> signUp(
+            @RequestPart(name = "userData") @Valid UserDto userDto,
+           @RequestPart(
+               required = false,
+               name = Constants.FILE_REQUEST_PART_ID
+           ) MultipartFile file
+    ) throws IOException {
         return ResponseEntity.ok(authenticationService.signUp(userDto, file));
     }
 
