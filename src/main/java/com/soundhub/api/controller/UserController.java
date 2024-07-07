@@ -1,5 +1,6 @@
 package com.soundhub.api.controller;
 
+import com.soundhub.api.Constants;
 import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.dto.request.CompatibleUsersRequest;
 import com.soundhub.api.dto.response.CompatibleUsersResponse;
@@ -37,9 +38,14 @@ public class UserController {
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable UUID userId,
-                                              @RequestPart UserDto userDto,
-                                              @RequestPart(required = false) MultipartFile file) throws IOException {
+    public ResponseEntity<UserDto> updateUser(
+            @PathVariable UUID userId,
+            @RequestPart UserDto userDto,
+            @RequestPart(
+                required = false,
+                name = Constants.FILE_REQUEST_PART_ID
+            ) MultipartFile file
+    ) throws IOException {
         return ResponseEntity.ok(userService.updateUser(userId, userDto, file));
     }
 
