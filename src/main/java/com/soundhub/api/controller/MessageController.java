@@ -60,7 +60,6 @@ public class MessageController {
 
     @MessageMapping("/message/delete/{messageId}")
     public void deleteMessage(@DestinationVariable UUID messageId, SimpMessageHeaderAccessor headerAccessor) {
-//        User currentUser = userService.getCurrentUser();
         String userId = headerAccessor.getFirstNativeHeader(Constants.DELETER_ID_HEADER);
         if (userId == null) {
             throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
