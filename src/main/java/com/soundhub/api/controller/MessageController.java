@@ -45,6 +45,7 @@ public class MessageController {
                 "/queue/messages/"+sendMessageRequest.getChatId().toString(),
                 ChatNotificationDto.builder()
                         .id(savedMessage.getId())
+                        .chatId(savedMessage.getChat().getId())
                         .senderId(savedMessage.getSender().getId())
                         .content(savedMessage.getContent())
                         .build()

@@ -16,5 +16,7 @@ public class ChatNotificationDto {
 
     private UUID senderId;
 
+    private UUID chatId;
+
     private String content;
 }
