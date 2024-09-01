@@ -43,6 +43,9 @@ public class Message {
     @Column(name = "isRead")
     private Boolean isRead;
 
+    @Column(name = "reply_to_message_id")
+    private UUID replyToMessageId;
+
     @ManyToOne
     @JoinColumn(name = "chat_id")
     @JsonIgnore

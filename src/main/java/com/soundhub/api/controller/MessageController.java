@@ -42,10 +42,11 @@ public class MessageController {
         Message savedMessage = messageService.sendMessage(sendMessageRequest);
 
         messagingTemplate.convertAndSend(
-                "/queue/messages/"+sendMessageRequest.getChatId().toString(),
+                "/queue/messages/" + sendMessageRequest.getChatId().toString(),
                 ChatNotificationDto.builder()
                         .id(savedMessage.getId())
                         .chatId(savedMessage.getChat().getId())
+                        .replyToMessageId(savedMessage.getReplyToMessageId())
                         .senderId(savedMessage.getSender().getId())
                         .content(savedMessage.getContent())
                         .build()
