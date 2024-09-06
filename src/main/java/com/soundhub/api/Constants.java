@@ -24,6 +24,7 @@ public class Constants {
     public static final String PERMISSION_MESSAGE = "You don't have permissions for this operation.";
     public static final String CHAT_DELETE_SUCCESS_MSG = "Chat with id: %s was successfully deleted";
     public static final String CHAT_NOT_CONTAINS_USER = "This user is not related to this chat";
+    public static final String MESSAGE_PAGE_NOT_FOUND = "This page is not found. Total page count is %d";
     public static final String UNAUTHORIZED_ERROR_MESSAGE = "Sorry, You're not authorized to access this resource.";
     public static final String FRIEND_ALREADY_ADDED = "Friend is already in friends list";
     public static final String INVITE_ALREADY_SENT_MSG = "Invitation for this user has already sent";
@@ -31,6 +32,9 @@ public class Constants {
     public static final String USER_CANNOT_ADD_HIMSELF = "User can't add himself as a friend!";
 
     public static final String PYTHON_EXECUTION_FAILED = "Python script execution failed";
+
+    public static final String DEFAULT_MESSAGE_PAGE = "0";
+    public static final String DEFAULT_MESSAGE_PAGE_SIZE = "50";
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final String DELETER_ID_HEADER = "DeleterId";

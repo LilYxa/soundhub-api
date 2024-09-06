@@ -47,7 +47,7 @@ public class Message {
     private UUID replyToMessageId;
 
     @ManyToOne
-    @JoinColumn(name = "chat_id")
+    @JoinColumn(name = "chat_id", referencedColumnName = "id")
     @JsonIgnore
     private Chat chat;
 

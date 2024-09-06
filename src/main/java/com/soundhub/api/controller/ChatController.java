@@ -1,9 +1,9 @@
 package com.soundhub.api.controller;
 
 import com.soundhub.api.Constants;
-import com.soundhub.api.dto.response.ApiResponse;
 import com.soundhub.api.dto.request.GroupChatRequest;
 import com.soundhub.api.dto.request.SingleChatRequest;
+import com.soundhub.api.dto.response.ApiResponse;
 import com.soundhub.api.model.Chat;
 import com.soundhub.api.model.User;
 import com.soundhub.api.service.ChatService;
@@ -77,6 +77,4 @@ public class ChatController {
         Chat chat = chatService.renameGroup(chatId, newName, user);
         return new ResponseEntity<>(chat, HttpStatus.OK);
     }
-
-
 }

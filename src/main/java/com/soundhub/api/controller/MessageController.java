@@ -6,9 +6,11 @@ import com.soundhub.api.dto.request.SendMessageRequest;
 import com.soundhub.api.exception.ApiException;
 import com.soundhub.api.model.Message;
 import com.soundhub.api.model.User;
-import com.soundhub.api.service.UserService;
 import com.soundhub.api.service.MessageService;
+import com.soundhub.api.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -16,18 +18,14 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/messages")
+@Slf4j
 public class MessageController {
-
     @Autowired
     private MessageService messageService;
 
@@ -72,9 +70,21 @@ public class MessageController {
     }
 
     @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<Message>> getChatMessages(@PathVariable UUID chatId) {
+    public ResponseEntity<Page<Message>> getChatMessages(
+        @PathVariable UUID chatId,
+        @RequestParam(defaultValue = Constants.DEFAULT_MESSAGE_PAGE) int page,
+        @RequestParam(defaultValue = Constants.DEFAULT_MESSAGE_PAGE_SIZE) int size,
+        @RequestParam(defaultValue = "timestamp") String sort,
+        @RequestParam(defaultValue = "desc") String order
+    ) {
         User currentUser = userService.getCurrentUser();
-        List<Message> chatMessages = messageService.findMessagesByChatId(chatId, currentUser);
+        Page<Message> chatMessages = messageService.findMessagesByChatId(
+            chatId, currentUser, page, size, sort, order
+        );
+
+        log.debug("[1] MessageController[getChatMessages] -> current user: {}", currentUser);
+        log.debug("[2] MessageController[getChatMessages] -> chatMessages: {}", chatMessages);
+
         return new ResponseEntity<>(chatMessages, HttpStatus.OK);
     }
 

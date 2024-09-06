@@ -11,17 +11,20 @@ import com.soundhub.api.repository.MessageRepository;
 import com.soundhub.api.service.ChatService;
 import com.soundhub.api.service.MessageService;
 import com.soundhub.api.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class MessageServiceImpl implements MessageService {
     @Autowired
     private MessageRepository messageRepository;
@@ -50,16 +53,35 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> findMessagesByChatId(UUID chatId, User reqUser) {
+    public Page<Message> findMessagesByChatId(
+        UUID chatId,
+        User reqUser,
+        int page,
+        int size,
+        String sort,
+        String order
+    ) {
         Chat chat = chatService.getChatById(chatId);
+        int adjustedPage = (page > 0) ? page - 1 : 0;
+
+        Sort sortType = order.equalsIgnoreCase("asc")
+                ? Sort.by(sort).ascending()
+                : Sort.by(sort).descending();
+
+        PageRequest pageRequest = PageRequest.of(adjustedPage, size, sortType);
+        Page<Message> pages = messageRepository.findByChat_Id(chatId, pageRequest);
+
+        if (adjustedPage > pages.getTotalPages())
+            throw new ApiException(
+                    HttpStatus.NOT_FOUND,
+                    String.format(Constants.MESSAGE_PAGE_NOT_FOUND, pages.getTotalPages())
+            );
 
         if (!chat.getParticipants().contains(reqUser)) {
             throw new ApiException(HttpStatus.FORBIDDEN, Constants.CHAT_NOT_CONTAINS_USER);
         }
 
-        return messageRepository.findByChatId(chatId) == null
-                ? new ArrayList<>()
-                : messageRepository.findByChatId(chatId);
+        return pages;
     }
 
     @Override
