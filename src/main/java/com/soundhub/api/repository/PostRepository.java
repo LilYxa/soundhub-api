@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, UUID> {
-    public List<Post> findAllByAuthor(User user);
+    List<Post> findAllByAuthor(User user);
 }

@@ -2,9 +2,7 @@ package com.soundhub.api;
 
 public class Constants {
     public static final String USER_RESOURCE_NAME = "User";
-
     public static final String POST_RESOURCE_NAME = "Post";
-
     public static final String CHAT_RESOURCE_NAME = "Chat";
     public static final String MESSAGE_RESOURCE_NAME = "Message";
     public static final String INVITE_RESOURCE_NAME = "Invite";
@@ -13,6 +11,7 @@ public class Constants {
     public static final String EMAIL_FIELD = "email";
     public static final String ID_FIELD = "id";
 
+    // error messages
     public static final String USER_EMAIL_EXISTS_MSG = "This email is already taken";
     public static final String USER_USERNAME_EXISTS_MSG = "This username is already taken";
     public static final String USER_ALREADY_EXISTS = "This user already exists";
@@ -30,7 +29,6 @@ public class Constants {
     public static final String INVITE_ALREADY_SENT_MSG = "Invitation for this user has already sent";
     public static final String USER_ALREADY_FRIEND = "This user is already a friend";
     public static final String USER_CANNOT_ADD_HIMSELF = "User can't add himself as a friend!";
-
     public static final String PYTHON_EXECUTION_FAILED = "Python script execution failed";
 
     public static final String DEFAULT_MESSAGE_PAGE = "0";
