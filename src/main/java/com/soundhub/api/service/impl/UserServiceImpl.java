@@ -56,12 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(UserDto userDto, MultipartFile file) throws IOException {
-        String avatarUrl = null;
-
-        if (file != null) {
-            String uploadedFilename = fileService.uploadFile(avatarFolderName, file);
-            avatarUrl = Constants.FILE_PATH_PART + uploadedFilename;
-        }
+        String avatarUrl = file == null ? null : fileService.uploadFile(avatarFolderName, file);
 
         User user = User.builder()
                 .email(userDto.getEmail())
