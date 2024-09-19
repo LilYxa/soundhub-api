@@ -13,12 +13,9 @@ import java.util.UUID;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, UUID> {
-//    Optional<Chat> findBySenderIdAndRecipientId(UUID senderId, UUID recipientId);
-
     @Query("SELECT c FROM Chat c JOIN c.participants u WHERE u.id=:user_id")
     List<Chat> findChatsByUserId(@Param("user_id") UUID userId);
 
     @Query("SELECT c FROM Chat c WHERE c.isGroup = false AND :sender MEMBER OF c.participants AND :recipient MEMBER OF c.participants")
     Optional<Chat> findSingleChatByUsers(@Param("sender") User sender, @Param("recipient") User recipient);
-
 }

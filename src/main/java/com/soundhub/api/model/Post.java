@@ -41,7 +41,7 @@ public class Post {
     @ElementCollection
     private List<String> images;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_posts",
             joinColumns = @JoinColumn(name = "post_id"),

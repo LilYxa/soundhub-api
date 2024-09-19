@@ -2,6 +2,7 @@ package com.soundhub.api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.soundhub.api.Constants;
@@ -42,8 +43,16 @@ public class Message {
     @Column(name = "isRead")
     private Boolean isRead;
 
+    @Column(name = "reply_to_message_id")
+    private UUID replyToMessageId;
+
     @ManyToOne
-    @JoinColumn(name = "chat_id")
+    @JoinColumn(name = "chat_id", referencedColumnName = "id")
     @JsonIgnore
     private Chat chat;
+
+    @JsonProperty("chat_id")
+    public UUID getChatId() {
+        return chat.getId();
+    }
 }

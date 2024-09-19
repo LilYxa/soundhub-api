@@ -9,7 +9,6 @@ import com.soundhub.api.model.User;
 import com.soundhub.api.repository.ChatRepository;
 import com.soundhub.api.service.ChatService;
 import com.soundhub.api.service.UserService;
-import com.soundhub.api.util.mappers.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,15 +21,11 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class ChatServiceImpl implements ChatService {
-
     @Autowired
     private ChatRepository chatRepository;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Override
     public Chat createChat(User sender, UUID recipientId) throws ResourceNotFoundException {

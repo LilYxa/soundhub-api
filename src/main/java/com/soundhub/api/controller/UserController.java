@@ -75,7 +75,6 @@ public class UserController {
         User currentUser = userService.getCurrentUser();
         List<User> potentialFriends = new ArrayList<>();
         List<UUID> ids = recommendationService.getUsers(currentUser.getId());
-        //        List<UUID> ids = recommendationService.recommendUsers(currentUser.getId());
         List<User> rawFriends = userService.getUsersByIds(ids);
         rawFriends.forEach(friend -> {
             if (!currentUser.getFriends().contains(friend)) {

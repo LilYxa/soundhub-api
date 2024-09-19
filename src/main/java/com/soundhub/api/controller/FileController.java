@@ -20,17 +20,21 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
-    @Value("${project.pictures}")
-    private String path;
+    @Value("${project.staticFolder}")
+    private String staticFolder;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFileHandler(@RequestPart MultipartFile file) throws IOException {
-        String fileName = fileService.uploadFile(path, file);
+        String fileName = fileService.uploadFile(staticFolder, file);
         return ResponseEntity.ok("File was uploaded: " + fileName);
     }
 
     @GetMapping("/{filename}")
-    public void serveFileHandler(@PathVariable String filename, @RequestParam String folderName, HttpServletResponse httpServletResponse) throws IOException {
+    public void serveFileHandler(
+            @PathVariable String filename,
+            @RequestParam String folderName,
+            HttpServletResponse httpServletResponse
+    ) throws IOException {
         InputStream resourceFile = fileService.getResourceFile(folderName, filename);
         httpServletResponse.setContentType(MediaType.ALL_VALUE);
         StreamUtils.copy(resourceFile, httpServletResponse.getOutputStream());
@@ -38,7 +42,7 @@ public class FileController {
 
     @PostMapping("/upload/files")
     public ResponseEntity<List<String>> uploadListFilesHandler(@RequestPart List<MultipartFile> files) {
-        List<String> fileNames = fileService.uploadFileList(path, files);
+        List<String> fileNames = fileService.uploadFileList(staticFolder, files);
         return ResponseEntity.ok(fileNames);
     }
 }
