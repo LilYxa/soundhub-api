@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,16 +100,17 @@ public class PostServiceImpl implements PostService {
     public UUID deletePost(UUID postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ResourceNotFoundException(Constants.POST_RESOURCE_NAME, Constants.ID_FIELD, postId));
+
         if (!userService.getCurrentUser().equals(post.getAuthor())) {
             throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
         }
+
         List<String> postImages = post.getImages();
-        List<String> postImagesUrls = new ArrayList<>();
-        postImages.forEach(f -> postImagesUrls.add(f.substring(f.lastIndexOf("/") + 1)));
-        log.info("deletePost[1]: Getting the post images urls {}", postImagesUrls);
-        postImagesUrls.forEach(f -> {
+        log.info("deletePost[1]: Getting the post images urls {}", postImages);
+
+        postImages.forEach(f -> {
             try {
-                Files.deleteIfExists(Paths.get(postFolder, f));
+                Files.deleteIfExists(fileService.getStaticFile(postFolder, f));
             } catch (IOException e) {
                 throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
             }
@@ -156,6 +156,10 @@ public class PostServiceImpl implements PostService {
             throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
         }
 
+        replaceFilesUrls = replaceFilesUrls.stream()
+                .map(url -> url.substring(url.lastIndexOf('/') + 1))
+                .toList();
+
         List<String> postImages = new ArrayList<>(post.getImages());
         postImages.addAll(addNewFiles(files));
 
@@ -184,7 +188,7 @@ public class PostServiceImpl implements PostService {
         if (replaceFilesUrls != null) {
             replaceFilesUrls.forEach(f -> {
                 try {
-                    Files.deleteIfExists(Paths.get(postFolder, f));
+                    Files.deleteIfExists(fileService.getStaticFile(postFolder, f));
                     postImages.remove(f);
                     log.debug("deleteReplacingFiles[1]: Files deleted {}", f);
                 } catch (IOException e) {
