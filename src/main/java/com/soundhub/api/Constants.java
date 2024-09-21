@@ -1,6 +1,8 @@
 package com.soundhub.api;
 
 public class Constants {
+    public static final String HOST_REGEX = "https?:\\/\\/(?:[a-zA-Z0-9.-]+(?:\\.[a-zA-Z]{2,})?|(?:\\d{1,3}\\.){3}\\d{1,3})(?:\\/[^\\s]*)?";
+
     public static final String USER_RESOURCE_NAME = "User";
     public static final String POST_RESOURCE_NAME = "Post";
     public static final String CHAT_RESOURCE_NAME = "Chat";

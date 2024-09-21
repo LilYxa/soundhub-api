@@ -23,7 +23,8 @@ public class FileAspect {
     private void modifyAvatarUrl(User user) {
         if (user != null && user.getAvatarUrl() != null) {
             String userAvatar = user.getAvatarUrl();
-            if (!userAvatar.contains(baseUrl)) {
+
+            if (!userAvatar.matches(Constants.HOST_REGEX)) {
                 user.setAvatarUrl(baseUrl + Constants.FILE_PATH_PART + userAvatar);
             }
         }
@@ -31,7 +32,11 @@ public class FileAspect {
 
     private List<String> modifyFileUrls(List<String> urls) {
         return urls.stream()
-                .map(url -> (url != null && !url.contains(baseUrl)) ? baseUrl + Constants.FILE_PATH_PART + url : url)
+                .map(
+                    url -> (url != null && !url.matches(Constants.HOST_REGEX))
+                        ? baseUrl + Constants.FILE_PATH_PART + url
+                        : url
+                )
                 .toList();
     }
 
