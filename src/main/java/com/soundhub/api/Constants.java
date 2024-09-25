@@ -49,6 +49,9 @@ public class Constants {
     public static final String FOLDER_NAME_PARAM = "?folderName=";
 
     public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
+    // request part ids
+    public static final String USER_DTO_SIGN_UP_ID = "userData";
     public static final String FILE_REQUEST_PART_ID = "files";
     public static final String DELETE_FILE_LIST_REQUEST_PART_ID = "deleteFiles";
 
