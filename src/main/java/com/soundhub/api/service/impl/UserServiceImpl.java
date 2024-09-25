@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
                 );
 
         String fileName = user.getAvatarUrl();
-        Files.deleteIfExists(fileService.getStaticFile(avatarFolderName, fileName));
+        Files.deleteIfExists(fileService.getStaticFilePath(avatarFolderName, fileName));
 
         userRepository.delete(user);
         return user.getId();
@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
 
         if (file != null) {
             if (fileName != null) {
-                Files.deleteIfExists(fileService.getStaticFile(avatarFolderName, fileName));
+                Files.deleteIfExists(fileService.getStaticFilePath(avatarFolderName, fileName));
             }
 
             fileName = fileService.uploadFile(avatarFolderName, file);

@@ -1,6 +1,8 @@
 package com.soundhub.api.service.impl;
 
+import com.soundhub.api.Constants;
 import com.soundhub.api.exception.ApiException;
+import com.soundhub.api.exception.ResourceNotFoundException;
 import com.soundhub.api.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,10 +61,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public InputStream getResourceFile(String path, String filename) throws FileNotFoundException {
-        String staticPath = getStaticPath(path).toFile().getAbsolutePath();
-        String filePath = Paths.get(staticPath, filename).toFile().getAbsolutePath();
-        return new FileInputStream(filePath);
+    public InputStream getResourceFile(String path, String filename) {
+        File staticFile = getStaticFilePath(path, filename).toFile();
+        try { return new FileInputStream(staticFile); }
+        catch (FileNotFoundException e) {
+            throw new ResourceNotFoundException(String.format(Constants.FILE_NOT_FOUND, filename));
+        }
     }
 
     @Override
@@ -71,11 +75,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public Path getStaticFile(String folder, String filename) {
-        String staticPath = getStaticPath(folder)
-                .toFile()
-                .getAbsolutePath();
+    public Path getStaticFilePath(String folder, String filename) {
+        File staticFile = getStaticPath(folder)
+                .toFile();
 
-        return Paths.get(staticPath, filename);
+        if (!staticFile.exists())
+            throw new ResourceNotFoundException(String.format(Constants.FILE_NOT_FOUND, staticFile.getName()));
+
+        return Paths.get(staticFile.getAbsolutePath(), filename);
     }
 }

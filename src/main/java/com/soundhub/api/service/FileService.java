@@ -17,5 +17,5 @@ public interface FileService {
 
     Path getStaticPath(String folder);
 
-    Path getStaticFile(String folder, String filename);
+    Path getStaticFilePath(String folder, String filename);
 }

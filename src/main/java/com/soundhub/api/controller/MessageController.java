@@ -3,6 +3,7 @@ package com.soundhub.api.controller;
 import com.soundhub.api.Constants;
 import com.soundhub.api.dto.ChatNotificationDto;
 import com.soundhub.api.dto.request.SendMessageRequest;
+import com.soundhub.api.dto.response.UnreadMessagesResponse;
 import com.soundhub.api.exception.ApiException;
 import com.soundhub.api.model.Message;
 import com.soundhub.api.model.User;
@@ -78,7 +79,7 @@ public class MessageController {
         @RequestParam(defaultValue = "desc") String order
     ) {
         User currentUser = userService.getCurrentUser();
-        Page<Message> chatMessages = messageService.findMessagesByChatId(
+        Page<Message> chatMessages = messageService.findPagedMessagesByChatId(
             chatId, currentUser, page, size, sort, order
         );
 
@@ -87,6 +88,12 @@ public class MessageController {
 
         return new ResponseEntity<>(chatMessages, HttpStatus.OK);
     }
+
+    @GetMapping("/unread")
+    public ResponseEntity<UnreadMessagesResponse> getUnreadMessages() {
+        return new ResponseEntity<>(messageService.getUnreadMessages(), HttpStatus.OK);
+    }
+
 
     @GetMapping("/{messageId}")
     public ResponseEntity<Message> getMessageById(@PathVariable UUID messageId) {

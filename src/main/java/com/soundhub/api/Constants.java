@@ -21,6 +21,7 @@ public class Constants {
     public static final String SUCCESSFUL_LOGOUT = "You have successfully logged out";
     public static final String INVALID_EMAIL_PASSWORD = "Invalid email or password";
     public static final String FILE_ALREADY_EXISTS = "This file already exist! Please enter another file name.";
+    public static final String FILE_NOT_FOUND = "File %s doesn't exist";
     public static final String RESOURCE_NOT_EXIST = "Resource %s not found";
     public static final String PERMISSION_MESSAGE = "You don't have permissions for this operation.";
     public static final String CHAT_DELETE_SUCCESS_MSG = "Chat with id: %s was successfully deleted";
