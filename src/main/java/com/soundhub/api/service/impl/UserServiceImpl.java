@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -47,12 +46,6 @@ public class UserServiceImpl implements UserService {
 
     @Value("${project.avatar}")
     private String avatarFolderName;
-
-    @Value("${project.resources.path}")
-    private String resourcesPath;
-
-    @Value("${project.staticFolder}")
-    private String staticFolder;
 
     @Override
     public User addUser(UserDto userDto, MultipartFile file) throws IOException {
@@ -169,7 +162,7 @@ public class UserServiceImpl implements UserService {
                 );
 
         String fileName = user.getAvatarUrl();
-        Files.deleteIfExists(Paths.get(resourcesPath, staticFolder, avatarFolderName, fileName));
+        Files.deleteIfExists(fileService.getStaticFilePath(avatarFolderName, fileName));
 
         userRepository.delete(user);
         return user.getId();
@@ -199,7 +192,7 @@ public class UserServiceImpl implements UserService {
 
         if (file != null) {
             if (fileName != null) {
-                Files.deleteIfExists(fileService.getStaticFile(avatarFolderName, fileName));
+                Files.deleteIfExists(fileService.getStaticFilePath(avatarFolderName, fileName));
             }
 
             fileName = fileService.uploadFile(avatarFolderName, file);

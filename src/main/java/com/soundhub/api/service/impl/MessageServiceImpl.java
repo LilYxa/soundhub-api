@@ -2,6 +2,7 @@ package com.soundhub.api.service.impl;
 
 import com.soundhub.api.Constants;
 import com.soundhub.api.dto.request.SendMessageRequest;
+import com.soundhub.api.dto.response.UnreadMessagesResponse;
 import com.soundhub.api.exception.ApiException;
 import com.soundhub.api.exception.ResourceNotFoundException;
 import com.soundhub.api.model.Chat;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -53,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Page<Message> findMessagesByChatId(
+    public Page<Message> findPagedMessagesByChatId(
         UUID chatId,
         User reqUser,
         int page,
@@ -82,6 +84,20 @@ public class MessageServiceImpl implements MessageService {
         }
 
         return pages;
+    }
+
+    @Override
+    public UnreadMessagesResponse getUnreadMessages() {
+        UUID currentUserId = userService.getCurrentUser().getId();
+        List<Message> unreadMessages = messageRepository.findAll()
+                .stream()
+                .filter(msg -> msg.getSender().getId() != currentUserId && !msg.getIsRead())
+                .toList();
+
+        return UnreadMessagesResponse.builder()
+                .messages(unreadMessages)
+                .count(unreadMessages.size())
+                .build();
     }
 
     @Override

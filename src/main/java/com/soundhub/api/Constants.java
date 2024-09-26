@@ -1,6 +1,8 @@
 package com.soundhub.api;
 
 public class Constants {
+    public static final String HOST_REGEX = "https?:\\/\\/(?:[a-zA-Z0-9.-]+(?:\\.[a-zA-Z]{2,})?|(?:\\d{1,3}\\.){3}\\d{1,3})(?:\\/[^\\s]*)?";
+
     public static final String USER_RESOURCE_NAME = "User";
     public static final String POST_RESOURCE_NAME = "Post";
     public static final String CHAT_RESOURCE_NAME = "Chat";
@@ -19,6 +21,7 @@ public class Constants {
     public static final String SUCCESSFUL_LOGOUT = "You have successfully logged out";
     public static final String INVALID_EMAIL_PASSWORD = "Invalid email or password";
     public static final String FILE_ALREADY_EXISTS = "This file already exist! Please enter another file name.";
+    public static final String FILE_NOT_FOUND = "File %s doesn't exist";
     public static final String RESOURCE_NOT_EXIST = "Resource %s not found";
     public static final String PERMISSION_MESSAGE = "You don't have permissions for this operation.";
     public static final String CHAT_DELETE_SUCCESS_MSG = "Chat with id: %s was successfully deleted";
@@ -46,6 +49,9 @@ public class Constants {
     public static final String FOLDER_NAME_PARAM = "?folderName=";
 
     public static final String LOCAL_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
+    // request part ids
+    public static final String USER_DTO_SIGN_UP_ID = "userData";
     public static final String FILE_REQUEST_PART_ID = "files";
     public static final String DELETE_FILE_LIST_REQUEST_PART_ID = "deleteFiles";
 

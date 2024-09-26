@@ -2,16 +2,13 @@ package com.soundhub.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soundhub.api.Constants;
-import com.soundhub.api.dto.PostDto;
 import com.soundhub.api.dto.SignInDto;
 import com.soundhub.api.dto.SignUpDto;
 import com.soundhub.api.dto.UserDto;
 import com.soundhub.api.dto.request.RefreshTokenRequest;
 import com.soundhub.api.dto.response.AuthResponse;
 import com.soundhub.api.dto.response.LogoutResponse;
-import com.soundhub.api.enums.Gender;
 import com.soundhub.api.enums.Role;
-import com.soundhub.api.model.Genre;
 import com.soundhub.api.model.User;
 import com.soundhub.api.security.AuthenticationService;
 import com.soundhub.api.security.BlacklistingService;
@@ -23,8 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,7 +28,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -44,11 +38,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -91,8 +84,6 @@ public class AuthControllerTest {
     public void setUp() throws IOException {
         MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
-
-//        MockMultipartFile avatar = new MockMultipartFile("avatar", "image1.jpg", "image/jpeg", "image1 content".getBytes());
 
         user = User.builder()
                 .id(UUID.randomUUID())
@@ -149,8 +140,8 @@ public class AuthControllerTest {
     public void testSignUp() throws Exception {
         when(authenticationService.signUp(any(UserDto.class), any(MultipartFile.class))).thenReturn(authResponse);
 
-        MockMultipartFile userDtoFile = new MockMultipartFile("userData", "", "application/json", new ObjectMapper().writeValueAsBytes(userDto));
-        MockMultipartFile avatar = new MockMultipartFile("file", "image1.jpg", "image/jpeg", "image1 content".getBytes());
+        MockMultipartFile userDtoFile = new MockMultipartFile(Constants.USER_DTO_SIGN_UP_ID, "", "application/json", new ObjectMapper().writeValueAsBytes(userDto));
+        MockMultipartFile avatar = new MockMultipartFile(Constants.FILE_REQUEST_PART_ID, "image1.jpg", "image/jpeg", "image1 content".getBytes());
 
         MvcResult result = mockMvc.perform(multipart("/api/v1/auth/sign-up")
                         .file(userDtoFile)

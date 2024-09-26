@@ -110,7 +110,7 @@ public class PostServiceImpl implements PostService {
 
         postImages.forEach(f -> {
             try {
-                Files.deleteIfExists(fileService.getStaticFile(postFolder, f));
+                Files.deleteIfExists(fileService.getStaticFilePath(postFolder, f));
             } catch (IOException e) {
                 throw new ApiException(HttpStatus.BAD_REQUEST, e.getMessage());
             }
@@ -188,7 +188,7 @@ public class PostServiceImpl implements PostService {
         if (replaceFilesUrls != null) {
             replaceFilesUrls.forEach(f -> {
                 try {
-                    Files.deleteIfExists(fileService.getStaticFile(postFolder, f));
+                    Files.deleteIfExists(fileService.getStaticFilePath(postFolder, f));
                     postImages.remove(f);
                     log.debug("deleteReplacingFiles[1]: Files deleted {}", f);
                 } catch (IOException e) {
