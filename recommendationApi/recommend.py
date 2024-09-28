@@ -1,13 +1,13 @@
-import sys
-
-import pandas as pd
-from sqlalchemy import create_engine
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.neighbors import NearestNeighbors
-from uuid import UUID
 import os
 from sys import argv
+from uuid import UUID
+
+import pandas as pd
 from dotenv import dotenv_values
+from sklearn.neighbors import NearestNeighbors
+from sklearn.preprocessing import MultiLabelBinarizer
+from sqlalchemy import create_engine
+
 from logger import logger
 
 path = os.getcwd()

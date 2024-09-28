@@ -1,9 +1,11 @@
 # for starting server execute in file directory: "uvicorn main:app --reload --host 0.0.0.0 --port 8888"
-from logger import logger
 from uuid import UUID
+
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
+
 import recommend
+from logger import logger
 
 app = FastAPI()
 
