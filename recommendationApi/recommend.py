@@ -1,4 +1,3 @@
-import os
 from sys import argv
 from uuid import UUID
 
@@ -10,12 +9,7 @@ from sqlalchemy import create_engine
 
 from logger import logger
 
-path = os.getcwd()
-res_path = os.path.abspath(os.path.join(path, os.pardir))
-filepath = os.path.join(res_path, "application.properties")
-
-config = dotenv_values(filepath)
-
+config = dotenv_values()
 
 def potential_friends(user_id: UUID, neigh: int = 5):
     engine = engine_init()
@@ -61,14 +55,16 @@ def potential_friends(user_id: UUID, neigh: int = 5):
 
 
 def engine_init():
-    db_user = config['spring.datasource.username']
-    db_password = config['spring.datasource.password']
-    db_url = config['spring.datasource.url']
+    db_user = config['DATASOURCE_USERNAME']
+    db_password = config['DATASOURCE_PASSWORD']
+    db_url = config['DATASOURCE_URL']
 
     # Создаем строку подключения
-    clean_url = db_url[5:]
+    clean_url = db_url
     first_slash_index = clean_url.find('/')
-    db_connection_string = clean_url[:first_slash_index+2] + f"{db_user}:{db_password}@" + clean_url[first_slash_index+2:]
+    db_connection_string = clean_url[:first_slash_index + 2] + f"{db_user}:{db_password}@" + clean_url[first_slash_index + 2:]
+
+    logger.debug(f'engine_init[2]: connection string is {db_connection_string}')
     return create_engine(db_connection_string)
 
 
@@ -83,7 +79,7 @@ def main(user_id: UUID):
         neigh = int(argv[2])
     except Exception as e:
         logger.error(f"main[2]: {e}")
-        neigh: int = int(config['python.neighbors.default'])
+        neigh: int = int(config['NEIGHBORS_DEFAULT'])
 
     try:
         friend_list = potential_friends(user_id, neigh)

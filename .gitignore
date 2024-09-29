@@ -2,12 +2,7 @@
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
 .settings
-.springBeans
 .sts4-cache
 
 ### Eclipse ###
@@ -20,6 +15,7 @@ tmp/
 *.swp
 *~.nib
 local.properties
+.env
 .settings/
 .loadpath
 .recommenders
@@ -59,9 +55,6 @@ local.properties
 
 # Code Recommenders
 .recommenders/
-
-# Annotation Processing
-.apt_generated/
 
 # Scala IDE specific (Scala & Java development for Eclipse)
 .cache-main
@@ -182,17 +175,11 @@ build/
 .#*
 *#
 *~
-.classpath
-.project
-.settings
 bin
 build
 target
-dependency-reduced-pom.xml
 *.sublime-*
 /scratch
 .gradle
 README.html
-*.iml
-.idea
 .exercism
