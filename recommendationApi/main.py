@@ -1,26 +1,44 @@
 # for starting server execute in file directory: "uvicorn main:app --reload --host 0.0.0.0 --port 8888"
+from fastapi import Depends, FastAPI, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from typing import Optional
 from uuid import UUID
 
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
-
-import recommend
-from logger import logger
+from exceptions.UserNotFoundException import UserNotFoundException
+from services import RecommendationService
+from utils import logger
 
 app = FastAPI()
 
 
+def get_service() -> Optional[RecommendationService]:
+    return RecommendationService()
+
+@app.exception_handler(UserNotFoundException)
+async def user_not_found_exception_handler(request: Request, exc: UserNotFoundException):
+    return JSONResponse(
+        status_code=404,
+        content={"message": exc.message},
+    )
+
+@app.exception_handler(ConnectionError)    
+async def database_connection_exception_handler(request: Request, exc: ConnectionError):
+    return JSONResponse(
+        status_code=503,
+        content={ "message": str(exc) }
+    )
+    
+
 @app.get("/", response_class=HTMLResponse)
-def healthcheck():
+async  def healthcheck():
     return "<h1>All good!</h1>"
 
 
 @app.get("/recommend/{user_id}")
-def recommend_users(user_id: UUID):
+async def recommend_users(user_id: UUID, service: Optional[RecommendationService] = Depends(get_service)):
     logger.debug(f"recommend_users[1]: user_id = {user_id}")
-    try:
-        friend_list = recommend.main(user_id=user_id)
-        return friend_list
-    except Exception as e:
-        logger.error(f"recommend_users[2]: {e}")
-        raise HTTPException(404, f"{e}")
+    friend_list = service.find_potential_friends(user_id) #recommend.main(user_id=user_id)
+    
+    logger.info(f'recommend_users[2]: {friend_list}')
+    
+    return friend_list
