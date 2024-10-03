@@ -1,6 +1,7 @@
 package com.soundhub.api.config;
 
 import com.soundhub.api.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
@@ -15,6 +16,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Configuration
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 public class BlacklistCacheConfig {

@@ -5,6 +5,4 @@ import java.util.UUID;
 
 public interface RecommendationService {
     List<UUID> getUsers(UUID user);
-
-    List<UUID> recommendUsers(UUID targetUser);
 }
