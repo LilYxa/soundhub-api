@@ -10,7 +10,7 @@ COPY target/api-0.0.1-SNAPSHOT.jar /app/app.jar
 
 COPY recommendationApi /app/recommendationApi
 
-COPY src/main/resources/application.properties /app/resources/application.properties
+COPY docker/application.properties /app/resources/application.properties
 
 WORKDIR /app/recommendationApi
 RUN pipenv install --system --deploy
