@@ -36,17 +36,20 @@ public class FileServiceImpl implements FileService {
 
         Path filePath = Paths.get(fileFolder.getAbsolutePath(), uuidFilename);
         File staticResourcesPath = Paths.get(resourcesPath, staticFolder).toFile();
+        boolean isFolderCreated;
 
         if (!staticResourcesPath.exists()) {
-            boolean created = staticResourcesPath.mkdir();
-            if (!created) {
+            isFolderCreated = staticResourcesPath.mkdir();
+
+            if (!isFolderCreated) {
                 throw new IOException("Could not create folder " + staticResourcesPath);
             }
         }
 
         if (!fileFolder.exists()) {
-            boolean created = fileFolder.mkdir();
-            if (!created) {
+            isFolderCreated = fileFolder.mkdir();
+
+            if (!isFolderCreated) {
                 throw new IOException("Could not create folder " + fileFolder);
             }
         }
