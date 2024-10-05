@@ -14,7 +14,7 @@ services:
       - app_network
     volumes:
       - postgres_data:/var/lib/postgresql/data
-#      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./genres.sql:/docker-entrypoint-initdb.d/genres.sql
 
   redis:
     image: redis:7
