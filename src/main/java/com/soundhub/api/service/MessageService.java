@@ -6,6 +6,7 @@ import com.soundhub.api.model.Message;
 import com.soundhub.api.model.User;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface MessageService {
@@ -19,6 +20,8 @@ public interface MessageService {
         String sort,
         String order
     );
+
+    List<Message> findAllMessagesByChatId(UUID chatId);
 
     UnreadMessagesResponse getUnreadMessages();
 

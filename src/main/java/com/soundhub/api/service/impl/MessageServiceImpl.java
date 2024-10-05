@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -87,12 +88,27 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<Message> findAllMessagesByChatId(UUID chatId) {
+        return messageRepository.findAllByChat_Id(chatId)
+                .stream()
+                .filter(msg -> msg.getChat().getId() == chatId)
+                .toList();
+    }
+
+    @Override
     public UnreadMessagesResponse getUnreadMessages() {
         UUID currentUserId = userService.getCurrentUser().getId();
-        List<Message> unreadMessages = messageRepository.findAll()
-                .stream()
-                .filter(msg -> msg.getSender().getId() != currentUserId && !msg.getIsRead())
-                .toList();
+        List<Chat> chats = chatService.findAllChatsByUserId(currentUserId);
+        List<Message> unreadMessages = new ArrayList<>();
+
+        chats.forEach(chat -> {
+            List<Message> chatMessages = findAllMessagesByChatId(chat.getId())
+                    .stream()
+                    .filter(msg -> msg.getSender().getId() != currentUserId && !msg.getIsRead())
+                    .toList();
+
+            unreadMessages.addAll(chatMessages);
+        });
 
         return UnreadMessagesResponse.builder()
                 .messages(unreadMessages)

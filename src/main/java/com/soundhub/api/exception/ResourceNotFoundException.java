@@ -2,7 +2,7 @@ package com.soundhub.api.exception;
 
 import com.soundhub.api.Constants;
 
-public class ResourceNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException {
 
     private String resourceName;
     private String fieldName;
