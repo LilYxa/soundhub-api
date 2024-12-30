@@ -2,6 +2,7 @@ package com.soundhub.api.service.impl;
 
 import com.soundhub.api.Constants;
 import com.soundhub.api.enums.InviteStatus;
+import com.soundhub.api.enums.InviteStrategyName;
 import com.soundhub.api.exception.ApiException;
 import com.soundhub.api.exception.InviteAlreadySentException;
 import com.soundhub.api.exception.ResourceNotFoundException;
@@ -10,6 +11,7 @@ import com.soundhub.api.model.User;
 import com.soundhub.api.repository.InviteRepository;
 import com.soundhub.api.service.InviteService;
 import com.soundhub.api.service.UserService;
+import com.soundhub.api.service.invite.strategy.InviteStrategyFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,13 @@ public class InviteServiceImpl implements InviteService {
 
     @Autowired
     private UserService userService;
+
+    private final InviteStrategyFactory strategyFactory;
+
+    @Autowired
+    public InviteServiceImpl(InviteStrategyFactory strategyFactory) {
+        this.strategyFactory = strategyFactory;
+    }
 
     @Override
     public Invite createInvite(User sender, User recipient) {
@@ -62,40 +71,18 @@ public class InviteServiceImpl implements InviteService {
     }
 
     @Override
-    public Invite acceptInvite(User inviteRecipient, UUID inviteId) throws IOException {
-        log.info("acceptInvite[1]: accept friend invitation with id: {}", inviteId);
-
-        Invite invite = inviteRepository.findById(inviteId)
-                .orElseThrow(() -> new ResourceNotFoundException(Constants.INVITE_RESOURCE_NAME, Constants.ID_FIELD, inviteId));
-
-        if (!inviteRecipient.equals(invite.getRecipient())) {
-            log.error("acceptInvite[1]: You don't have permissions for this action!");
-            throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
-        }
-
-        invite.setStatus(InviteStatus.ACCEPTED);
-        userService.addFriend(invite.getSender().getId());
-        inviteRepository.delete(invite);
-        log.info("acceptInvite[2]: invite: {} was accepted", invite);
-        return invite;
+    public Invite acceptInvite(User inviteRecipient, UUID inviteId) {
+        return strategyFactory.getStrategy(InviteStrategyName.AcceptInviteStrategy.name()).execute(inviteRecipient, inviteId);
     }
 
     @Override
     public Invite rejectInvite(User inviteRecipient, UUID inviteId) {
-        log.info("rejectInvite[1]: reject friend invitation with id: {}", inviteId);
+        return strategyFactory.getStrategy(InviteStrategyName.RejectInviteStrategy.name()).execute(inviteRecipient, inviteId);
+    }
 
-        Invite invite = inviteRepository.findById(inviteId)
-                .orElseThrow(() -> new ResourceNotFoundException(Constants.INVITE_RESOURCE_NAME, Constants.ID_FIELD, inviteId));
-
-        if (!inviteRecipient.equals(invite.getRecipient())) {
-            log.error("acceptInvite[1]: You don't have permissions for this action!");
-            throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
-        }
-
-        invite.setStatus(InviteStatus.REJECTED);
-        inviteRepository.delete(invite);
-        log.info("acceptInvite[2]: invite: {} was rejected", invite);
-        return invite;
+    @Override
+    public Invite deleteInvite(User sender, UUID inviteId) {
+        return strategyFactory.getStrategy(InviteStrategyName.DeleteInviteStrategy.name()).execute(sender, inviteId);
     }
 
     @Override
@@ -104,24 +91,6 @@ public class InviteServiceImpl implements InviteService {
         List<Invite> invites = inviteRepository.findAllByRecipient(user);
         log.info("getAllInvites[2]: invites: {}", invites);
         return invites;
-    }
-
-    @Override
-    public Invite deleteInvite(User user, UUID inviteId) {
-        log.info("deleteInvite[1]: deleting invite with id: {}", inviteId);
-
-        Invite invite = inviteRepository.findById(inviteId)
-                .orElseThrow(() -> new ResourceNotFoundException(Constants.INVITE_RESOURCE_NAME, Constants.ID_FIELD, inviteId));
-
-        if (!user.equals(invite.getSender())) {
-            log.error("deleteInvite[1]: You don't have permissions for this action!");
-            throw new ApiException(HttpStatus.FORBIDDEN, Constants.PERMISSION_MESSAGE);
-        }
-
-        inviteRepository.delete(invite);
-        invite.setStatus(InviteStatus.DELETED_BY_SENDER);
-        log.info("deleteInvite[2]: invite {} was successfully deleted", invite);
-        return invite;
     }
 
     @Override

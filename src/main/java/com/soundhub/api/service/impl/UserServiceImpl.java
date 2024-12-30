@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addFriend(UUID friendId) throws IOException {
+    public User addFriend(UUID friendId) {
         User user = getCurrentUser();
         User newFriend = getUserById(friendId);
 

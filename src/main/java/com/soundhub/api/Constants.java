@@ -33,6 +33,7 @@ public class Constants {
     public static final String USER_ALREADY_FRIEND = "This user is already a friend";
     public static final String USER_CANNOT_ADD_HIMSELF = "User can't add himself as a friend!";
     public static final String PYTHON_EXECUTION_FAILED = "Python script execution failed";
+    public static final String NO_INVITE_STRATEGY_MESSAGE = "No strategy found for name: %s";
 
     public static final String DEFAULT_MESSAGE_PAGE = "0";
     public static final String DEFAULT_MESSAGE_PAGE_SIZE = "50";

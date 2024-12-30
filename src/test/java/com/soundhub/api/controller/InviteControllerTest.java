@@ -51,9 +51,6 @@ public class InviteControllerTest {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private InviteRepository inviteRepository;
 
